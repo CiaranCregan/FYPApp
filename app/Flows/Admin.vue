@@ -4,7 +4,7 @@
     <card-view margin="10" col="0" row="0" backgroundColor="#275DAD">
         <DockLayout width="100%" height="200" stretchLastChild="false">
             <Label text="Clients" dock="top" height="60%" class="h3"/>
-            <Button text="View clients" dock="bottom" height="40%" backgroundColor="#3A7CA5" class="cardBtn" @tap="navigate"/>
+            <Button text="View clients" dock="bottom" height="40%" backgroundColor="#3A7CA5" class="cardBtn" @tap="navigate('Clients')"/>
             <!-- <Label text="Example button" dock="bottom" height="40%" backgroundColor="grey" class="cardBtn"/> -->
         </DockLayout>
     </card-view>
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import Clients from '../screens/Clients.vue'
 import Bookings from '../screens/Bookings.vue'
     export default {
         methods: {
@@ -45,11 +46,11 @@ import Bookings from '../screens/Bookings.vue'
             },
             navigate(screen){
                 switch(screen) {
+                    case 'Clients':
+                        this.$navigateTo(Clients, {clearHistory: true})
+                        break;
                     case 'Bookings':
                         this.$navigateTo(Bookings, {clearHistory: true})
-                        break;
-                    case 'Classes':
-                        this.$navigateTo(Classes, {clearHistory: true})
                         break;
                     default:
                         this.$navigateTo(App, {clearHistory: true})

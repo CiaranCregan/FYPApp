@@ -20,6 +20,7 @@ export default new Vuex.Store({
       booking_time: ''
     },
     bookings: [],
+    users: []
   },
   getters: {
     accessToken: state => {
@@ -41,6 +42,9 @@ export default new Vuex.Store({
     },
     bookings: state => {
       return state.bookings
+    },
+    showUsers: state => {
+      return state.users
     }
   },
   mutations: {
@@ -65,6 +69,9 @@ export default new Vuex.Store({
       state.firstUserBooking.booking_date = data[0].date
       state.firstUserBooking.booking_time = data[0].time
       state.firstUserBooking.booking_type = data[0].booking_type
+    },
+    setUsers(state, data){
+      state.users = data
     }
   },
   actions: {
@@ -114,6 +121,15 @@ export default new Vuex.Store({
         })
         .catch((error) =>{
           commit('setUserBooking', error.response.status)
+        })
+    },
+    getAllClients({commit}){
+      axios.get('http://127.0.0.1:8888/example-project/public/api/users')
+        .then((response) => {
+          commit('setUsers', response.data)
+        })
+        .catch((error) =>{
+          console.log(error)
         })
     }
   }

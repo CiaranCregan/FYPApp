@@ -11,20 +11,12 @@
                 <Image src="https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-6.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
 
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
-                <Label class="drawer-item" text="Clients" @tap="redirect('Clients')"/>
+                <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
+                <!-- <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/> -->
             </StackLayout>
 
             <StackLayout ~mainContent class="content">
-                <!-- <DockLayout stretchLastChild="true" height="100%">
-                    <Label text="Create a new booking" dock="top" height="40" backgroundColor="#289062"/> -->
-                    <Button text="Create new booking" @tap="createBooking" class="cardBtn"/>
-                    <!-- <StackLayout dock="center" width="100%" height="100%">
-                        <Label text="Pick a date:"/>
-                        <DatePicker v-model="selectedDate" year="2018"/>
-                        <Label text="Pick a time:"/>
-                        <TimePicker v-model="selectedTime" minuteInterval="15"/>
-                    </StackLayout>
-                </DockLayout> -->
+                <Label :text='users.length' />
             </StackLayout>
         </RadSideDrawer>
     </Page>
@@ -32,8 +24,7 @@
 
 <script >
 import App from '../screens/Home.vue'
-import Clients from '../screens/Clients.vue'
-import CreateBooking from '../screens/CreateBooking.vue'
+import Bookings from '../screens/Bookings.vue'
   export default {
     data() {
         return {
@@ -45,7 +36,13 @@ import CreateBooking from '../screens/CreateBooking.vue'
     computed: {
         username(){
             return `Welcome, ${this.$store.getters['username']}`
+        },
+        users(){
+            return this.$store.getters['showUsers']
         }
+    },
+    created () {
+        this.$store.dispatch('getAllClients');
     },
     methods: {
         openSidebar(){
@@ -64,18 +61,19 @@ import CreateBooking from '../screens/CreateBooking.vue'
             });
         },
         createBooking(){
-            this.$navigateTo(CreateBooking)
+
+            alert(this.selectedTime);
         },
         redirect(screen){
             switch(screen) {
                 case 'Home':
                     this.$navigateTo(App, {clearHistory: true})
                     break;
-                case 'Clients':
-                    this.$navigateTo(Clients, {clearHistory: true})
+                case 'Bookings':
+                    this.$navigateTo(Bookings, {clearHistory: true})
                     break;
-                default:
-                    this.$navigateTo(App, {clearHistory: true})
+                // default:
+                //     this.$navigateTo(App, {clearHistory: true})
             }
         }
     }
@@ -92,6 +90,6 @@ import CreateBooking from '../screens/CreateBooking.vue'
         color: white;
         width: 95%;
         padding: 20;
-        margin-top: 15;
+        margin-bottom: 15;
     }
 </style>
