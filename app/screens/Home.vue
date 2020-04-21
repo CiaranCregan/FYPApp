@@ -2,12 +2,10 @@
     <Page>
             <ActionBar>
                 <GridLayout class="nav" width="100%" columns="auto, *">
-                    <Image v-if="showMenu" src="https://cdn2.iconfinder.com/data/icons/clean-minimal-set/16/open-menu-01-512.png" stretch="fill" width="30" @tap="openSidebar"/>
+                    <Image v-if="showMenu" src="~/Images/menu.png" stretch="fill" width="30 " @tap="openSidebar"/>
                     <Label class="title" :text="username" col="1" />
                 </GridLayout>
             </ActionBar>
-            <PullToRefresh @refresh="refreshList">
-            <ScrollView>
                 <RadSideDrawer ref="drawer">
                     <StackLayout ~drawerContent backgroundColor="#d9544d">
                         <!-- ADMIN LINKS WILL GO IN HERE -->
@@ -22,8 +20,6 @@
                         <Citizen v-if="!isAdmin"/>
                     </StackLayout>
                 </RadSideDrawer>
-            </ScrollView>
-        </PullToRefresh>
     </Page>
 </template>
 
@@ -95,9 +91,8 @@ import Login from './Login.vue'
 
 <style>
     ActionBar {
-        background: red;
+        background: green;
         color: #fff;
-        font-family: 'FontAwesome';
     }
     .title {
         text-align: left;
@@ -122,16 +117,7 @@ import Login from './Login.vue'
     }
     .main-content{
         width: 100%;
-        height: 300;
+        height: auto;
     }
-    .hero-container{
-        width: 100%;
-        height:100%;
-        background: #fff;
-        padding: 20;
-        border-radius: 0 0 0 30;
-    }
-    .hero-content{
-        color: #333;
-    }
+ 
 </style>
