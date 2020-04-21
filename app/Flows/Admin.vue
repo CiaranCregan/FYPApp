@@ -18,14 +18,14 @@
     <card-view margin="10" elevation="40" radius="1" col="0" row="1" backgroundColor="#dfe1e5">
         <DockLayout width="100%" height="200" stretchLastChild="false">
             <Label text="My classes" dock="top" height="60%" backgroundColor="#dfe1e5" class="h3"/>
-            <Button text="View classes" dock="bottom" height="40%" backgroundColor="grey" class="cardBtn" @tap="navigate"/>
+            <Button text="View classes" dock="bottom" height="40%" backgroundColor="grey" class="cardBtn" @tap="navigate('Classes')"/>
             <!-- <Label text="Example button" dock="bottom" height="40%" backgroundColor="grey" class="cardBtn"/> -->
         </DockLayout>
     </card-view>
     <card-view margin="10" col="1" row="1" backgroundColor="#dfe1e5">
         <DockLayout width="100%" height="200" stretchLastChild="false">
             <Label text="Scan QR code" dock="top" height="60%" backgroundColor="#dfe1e5" class="h3"/>
-            <Button text="Scan now" dock="bottom" height="40%" backgroundColor="grey" class="cardBtn" @tap="navigate()"/>
+            <Button text="Scan now" dock="bottom" height="40%" backgroundColor="grey" class="cardBtn" @tap="navigate('Classes')"/>
             <!-- <Label text="Example button" dock="bottom" height="40%" backgroundColor="grey" class="cardBtn"/> -->
         </DockLayout>
     </card-view>
@@ -33,8 +33,10 @@
 </template>
 
 <script>
+import App from '../screens/Home.vue'
 import Clients from '../screens/Clients.vue'
 import Bookings from '../screens/Bookings.vue'
+import Classes from '../screens/AdminClasses.vue'
     export default {
         methods: {
             navigate() {
@@ -46,11 +48,17 @@ import Bookings from '../screens/Bookings.vue'
             },
             navigate(screen){
                 switch(screen) {
+                    case 'App':
+                        this.$navigateTo(Home, {clearHistory: true})
+                        break;
                     case 'Clients':
                         this.$navigateTo(Clients, {clearHistory: true})
                         break;
                     case 'Bookings':
                         this.$navigateTo(Bookings, {clearHistory: true})
+                        break;
+                    case 'Classes':
+                        this.$navigateTo(Classes, {clearHistory: true})
                         break;
                     default:
                         this.$navigateTo(App, {clearHistory: true})

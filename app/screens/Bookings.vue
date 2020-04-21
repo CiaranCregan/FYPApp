@@ -2,16 +2,17 @@
     <Page>
         <ActionBar>
             <GridLayout class="nav" width="100%" columns="auto, *">
-                <Image v-if="showMenu" src="https://cdn2.iconfinder.com/data/icons/clean-minimal-set/16/open-menu-01-512.png" stretch="fill" width="30" @tap="openSidebar"/>
+                <Image v-if="showMenu" src="~/Images/menu.png" stretch="fill" width="30" @tap="openSidebar"/>
                 <Label class="title" :text="username" col="1" />
             </GridLayout>
         </ActionBar>
         <RadSideDrawer ref="drawer">
             <StackLayout ~drawerContent backgroundColor="#d9544d">
-                <Image src="https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-6.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
+                <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
 
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
                 <Label class="drawer-item" text="Clients" @tap="redirect('Clients')"/>
+                <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/>
             </StackLayout>
 
             <StackLayout ~mainContent class="content">
@@ -34,6 +35,7 @@
 import App from '../screens/Home.vue'
 import Clients from '../screens/Clients.vue'
 import CreateBooking from '../screens/CreateBooking.vue'
+import Classes from '../screens/AdminClasses.vue'
   export default {
     data() {
         return {
@@ -73,6 +75,9 @@ import CreateBooking from '../screens/CreateBooking.vue'
                     break;
                 case 'Clients':
                     this.$navigateTo(Clients, {clearHistory: true})
+                    break;
+                case 'Classes':
+                    this.$navigateTo(Classes, {clearHistory: true})
                     break;
                 default:
                     this.$navigateTo(App, {clearHistory: true})

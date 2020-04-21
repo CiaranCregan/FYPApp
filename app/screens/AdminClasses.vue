@@ -11,14 +11,13 @@
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
 
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
-                <Label class="drawer-item" text="Clients" @tap="redirect('Clients')"/>
+                <Label class="drawer-item border" text="Clients" @tap="redirect('Clients')"/>
                 <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
+                <!-- <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/> -->
             </StackLayout>
 
-            <StackLayout ~mainContent class="main-content">
-                <FlexboxLayout flexDirection="column" class="hero-container">
-                    <Label class="body" textWrap="true">Hello from the classes screen </Label>
-                </FlexboxLayout>
+            <StackLayout ~mainContent class="content">
+                <Label text='Admin classes screen' />
             </StackLayout>
         </RadSideDrawer>
     </Page>
@@ -28,16 +27,25 @@
 import App from '../screens/Home.vue'
 import Clients from '../screens/Clients.vue'
 import Bookings from '../screens/Bookings.vue'
+import Classes from '../screens/AdminClasses.vue'
   export default {
     data() {
         return {
-            showMenu: true
+            showMenu: true,
+            selectedDate: '',
+            selectedTime: ''
         }
     },
     computed: {
         username(){
             return `Welcome, ${this.$store.getters['username']}`
+        },
+        users(){
+            return this.$store.getters['showUsers']
         }
+    },
+    created () {
+        this.$store.dispatch('getAllClients');
     },
     methods: {
         openSidebar(){
@@ -55,6 +63,10 @@ import Bookings from '../screens/Bookings.vue'
                 console.log("Alert dialog closed");
             });
         },
+        createBooking(){
+
+            alert(this.selectedTime);
+        },
         redirect(screen){
             switch(screen) {
                 case 'Home':
@@ -63,12 +75,11 @@ import Bookings from '../screens/Bookings.vue'
                 case 'Clients':
                     this.$navigateTo(Clients, {clearHistory: true})
                     break;
-                case 'Booking':
-                    this.$navigateTo(Booking, {clearHistory: true})
+                case 'Bookings':
+                    this.$navigateTo(Bookings, {clearHistory: true})
                     break;
-
-                default:
-                    this.$navigateTo(App, {clearHistory: true})
+                // default:
+                //     this.$navigateTo(App, {clearHistory: true})
             }
         }
     }
@@ -76,5 +87,15 @@ import Bookings from '../screens/Bookings.vue'
 </script>
 
 <style scoped>
-    
+    .content{
+        width: 100%;
+        height: auto;
+    }
+    .cardBtn{
+        background: black;
+        color: white;
+        width: 95%;
+        padding: 20;
+        margin-bottom: 15;
+    }
 </style>
