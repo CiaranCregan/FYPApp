@@ -16,7 +16,14 @@
             </StackLayout>
 
             <StackLayout ~mainContent class="content">
-                <Label :text='users.length' />
+                <StackLayout v-if="users.length === 0">
+                    <Label text="No users have registered yet"/>
+                </StackLayout>
+                <StackLayout v-else>
+                    <card-view margin="10" padding="20" background="red" v-for="(user, index) in users" :key="index" @tap="loadUserBookings(user.id)">
+                        <Label :text="user.name" class="card"/>
+                    </card-view>
+                </StackLayout>
             </StackLayout>
         </RadSideDrawer>
     </Page>
@@ -48,21 +55,8 @@ import Bookings from '../screens/Bookings.vue'
         openSidebar(){
             this.$refs.drawer.nativeView.showDrawer();
         },
-        closeSidebar(){
-            this.$refs.drawer.nativeView.closeDrawer();
-        },
-        onScan() {
-            alert({
-                title: "Are you sure you want to scan?",
-                message: "This will open your phone's camera",
-                okButtonText: "Ok"
-            }).then(() => {
-                console.log("Alert dialog closed");
-            });
-        },
-        createBooking(){
-
-            alert(this.selectedTime);
+        loadUserBookings(id){
+            alert(id)
         },
         redirect(screen){
             switch(screen) {
@@ -84,6 +78,11 @@ import Bookings from '../screens/Bookings.vue'
     .content{
         width: 100%;
         height: auto;
+    }
+    .card{
+        margin: 20;
+        color: #fff;
+        font-size: 20;
     }
     .cardBtn{
         background: black;

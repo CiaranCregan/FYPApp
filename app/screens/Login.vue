@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         login() {
-            this.$store.dispatch('login', {username: this.username, password: this.password})
+            this.$store.dispatch('login', {username: 'admin@csfitness.com', password: 'secret'})
             .then(() => {
                 if(this.$store.getters['accessToken'] !== ''){
                     this.$navigateTo(App, {clearHistory: true})

@@ -51,7 +51,7 @@ import App from '../screens/Home.vue'
             return `Welcome, ${this.$store.getters['username']}`
         },
         users(){
-            return this.$store.getters['showUsers']
+            return this.$store.getters['showListUsers']
         }
     },
     created () {
@@ -64,7 +64,7 @@ import App from '../screens/Home.vue'
         // let todayFormatted = `${today} ${todaysHour}:${todaysMinute}:${todaysSeconds}`
         // // console.log(todayFormatted)
         // this.selectedTime = todayFormatted
-        this.$store.dispatch('getAllClients');
+        this.$store.dispatch('getAllClientsForDropBooking');
     },
     methods: {
         openSidebar(){
