@@ -9,7 +9,7 @@
         <ScrollView>
         <RadSideDrawer ref="drawer">
             <StackLayout ~drawerContent backgroundColor="#d9544d">
-                <Image src="         <GridLayout class="nav" width="100%" columns="auto, *">
+            <GridLayout class="nav" width="100%" columns="auto, *">
                 <Image v-if="showMenu" src="~/Images/profile.png" stretch="fill" width="30" @tap="openSidebar"/>
                 <Label class="title" :text="username" col="1" />
             </GridLayout>" stretch="fill" width="50%" height="150" class="border-props image-padding"/>

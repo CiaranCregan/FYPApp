@@ -11,7 +11,7 @@
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
 
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
-                <Label class="drawer-item border" text="Clients" @tap="redirect('Clients')"/>
+                <Label class="drawer-item" text="Clients" @tap="redirect('Clients')"/>
                 <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
                 <!-- <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/> -->
             </StackLayout>
