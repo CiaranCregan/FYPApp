@@ -2,14 +2,17 @@
     <Page>
         <ActionBar>
             <GridLayout class="nav" width="100%" columns="auto, *">
-                <Image v-if="showMenu" src="https://cdn2.iconfinder.com/data/icons/clean-minimal-set/16/open-menu-01-512.png" stretch="fill" width="30" @tap="openSidebar"/>
+                <Image v-if="showMenu" src="~/Images/menu.png" stretch="fill" width="30" @tap="openSidebar"/>
                 <Label class="title" :text="username" col="1" />
             </GridLayout>
         </ActionBar>
         <ScrollView>
         <RadSideDrawer ref="drawer">
             <StackLayout ~drawerContent backgroundColor="#d9544d">
-                <Image src="https://pngimage.net/wp-content/uploads/2018/05/default-user-profile-image-png-6.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
+                <Image src="         <GridLayout class="nav" width="100%" columns="auto, *">
+                <Image v-if="showMenu" src="~/Images/profile.png" stretch="fill" width="30" @tap="openSidebar"/>
+                <Label class="title" :text="username" col="1" />
+            </GridLayout>" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
 
                 <Label class="drawer-item border" text="ADMIN SCREEN, DONT CLICK'" @tap="redirect('Home')"/>
                 <!-- <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/> -->
@@ -21,11 +24,11 @@
                     <Button text="Complete" dock="bottom" @tap="createBooking" class="cardBtn"/>
                     <StackLayout dock="center" width="100%" height="100%">
                         <Label text="Select user:" class="h4"/>
-                        <ListPicker :items="users" v-model="selectedUser" width="50%"/>
+                        <ListPicker :items="users" v-model="selectedUser" width="100%"/>
                         <Label text="Pick a date:" class="h4"/>
-                        <DatePicker v-model="selectedDate" :minDate="currentDate" width="50%"/>
+                        <DatePicker v-model="selectedDate" :minDate="currentDate" width="100%"/>
                         <Label text="Pick a time:" class="h4"/>
-                        <TimePicker v-model="selectedTime" minuteInterval="15" width="50%"/>
+                        <TimePicker v-model="selectedTime" minuteInterval="15" width="100%"/>
                     </StackLayout>
                 </DockLayout>
             </StackLayout>
