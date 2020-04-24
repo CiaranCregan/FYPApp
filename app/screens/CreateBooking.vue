@@ -9,12 +9,9 @@
         <ScrollView>
         <RadSideDrawer ref="drawer">
             <StackLayout ~drawerContent backgroundColor="#d9544d">
-            <GridLayout class="nav" width="100%" columns="auto, *">
-                <Image v-if="showMenu" src="~/Images/profile.png" stretch="fill" width="30" @tap="openSidebar"/>
-                <Label class="title" :text="username" col="1" />
-            </GridLayout>" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
+                <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
 
-                <Label class="drawer-item border" text="ADMIN SCREEN, DONT CLICK'" @tap="redirect('Home')"/>
+                <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
                 <!-- <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/> -->
             </StackLayout>
 
@@ -73,19 +70,8 @@ import App from '../screens/Home.vue'
         openSidebar(){
             this.$refs.drawer.nativeView.showDrawer();
         },
-        closeSidebar(){
-            this.$refs.drawer.nativeView.closeDrawer();
-        },
-        onScan() {
-            alert({
-                title: "Are you sure you want to scan?",
-                message: "This will open your phone's camera",
-                okButtonText: "Ok"
-            }).then(() => {
-                console.log("Alert dialog closed");
-            });
-        },
         createBooking(){
+            let self = this
             if (this.selectedUser === 0 || this.selectedTime === ''){
                 alert({
                     title: "Error",
@@ -95,7 +81,7 @@ import App from '../screens/Home.vue'
                     console.log("Alert dialog closed");
                 });
             } else {
-                let bookingDate = `${this.selectedDate.getFullYear()}-${this.selectedDate.getMonth()+1}-${this.selectedDate.getDate()}`
+                let bookingDate = `${this.selectedDate.getFullYear()}-${this.selectedDate.getMonth()+1 < 10 ? `0${this.selectedDate.getMonth()+1}` : this.selectedDate.getMonth()+1}-${this.selectedDate.getDate()}`
                 let bookingTime = `${this.selectedTime.getHours() < 10 ? '0' + this.selectedTime.getHours() : this.selectedTime.getHours()}:${this.selectedTime.getMinutes() === 0 ? '00' : this.selectedTime.getMinutes()}:00`
                 confirm({
                     title: "Confirm Booking",
@@ -103,8 +89,22 @@ import App from '../screens/Home.vue'
                     okButtonText: "Yes",
                     cancelButtonText: "No"
                 }).then(result => {
-                    console.log(result);
+                    if (result){
+                        let data = {
+                            username: this.users[this.selectedUser],
+                            date: bookingDate,
+                            booking_type: 'Private',
+                            time: bookingTime
+                        }
+
+                        this.$store.dispatch('createBookingForUser', data)
+                        .then(() => {
+                            this.$navigateTo(App, {clearHistory: true}) 
+                        })
+                    }
+                        // this.$store.dispatch('createBookingForUser', {username: this.users[this.selectedUser], date: bookingDate, booking_type: 'Private', time: bookingTime})
                 });
+                // console.log(bookingDate)
             }
         },
         redirect(screen){

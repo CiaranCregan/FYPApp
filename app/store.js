@@ -21,7 +21,9 @@ export default new Vuex.Store({
     },
     bookings: [],
     listUsers:[],
-    users: []
+    users: [],
+    bookingsByUserIdForAdmin: [],
+    todaysBookings: []
   },
   getters: {
     accessToken: state => {
@@ -49,6 +51,12 @@ export default new Vuex.Store({
     },
     showListUsers: state => {
       return state.listUsers
+    },
+    bookingsByUserIdForAdmin: state => {
+      return state.bookingsByUserIdForAdmin
+    },
+    todaysBookings: state => {
+      return state.todaysBookings
     }
   },
   mutations: {
@@ -79,10 +87,17 @@ export default new Vuex.Store({
     },
     setListUsers(state, data){
       state.listUsers = data
+    },
+    setUserBookingsByIdForAdmin(state, data){
+      state.bookingsByUserIdForAdmin = data
+    },
+    setTodaysBookings(state, data){
+      state.todaysBookings = data
     }
   },
   actions: {
     login({commit}, data){
+      console.log(data.username)
       return new Promise(function(resolve, reject){
         axios.post('http://127.0.0.1:8888/example-project/public/api/login', {
           username: data.username,
@@ -147,6 +162,45 @@ export default new Vuex.Store({
         .catch((error) =>{
           console.log(error)
         })
+    },
+    getUserBookingsByIdForAdmin({commit}, data){
+      // console.log(data)
+      axios.get('http://127.0.0.1:8888/example-project/public/api/admin/clients/bookings/' + data)
+        .then((response) => {
+          commit('setUserBookingsByIdForAdmin', response.data)
+        })
+        .catch((error) =>{
+          console.log(error)
+        })
+    },
+    getTodaysBookingsForAdmin({commit}, data){
+      axios.get('http://127.0.0.1:8888/example-project/public/api/admin/todaysbookings')
+        .then((response) => {
+          commit('setTodaysBookings', response.data)
+        })
+        .catch((error) =>{
+          console.log(error)
+        })
+    },
+    createBookingForUser({commit}, data){
+      return new Promise(function(resolve, reject){
+        axios.post('http://127.0.0.1:8888/example-project/public/api/bookings', data)
+            .then((response) => {
+              console.log(response.data)
+              // commit('setUserAccessToken', response.data.access_token)
+              // commit('setIsLoggedIn', true)
+              resolve(response)
+            })
+            .catch((error) => {
+              console.log(error)
+              alert({
+                title: "Oops!",
+                message: "Something went wrong. Please try again",
+                okButtonText: "Close"
+              })
+              reject(error)
+        })
+      })
     }
   }
 });

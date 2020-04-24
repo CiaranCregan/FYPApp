@@ -33,6 +33,8 @@
 import App from '../screens/Home.vue'
 import Bookings from '../screens/Bookings.vue'
 import Classes from '../screens/AdminClasses.vue'
+
+import AdminClientsView from '../screens/AdminClientview.vue'
   export default {
     data() {
         return {
@@ -57,7 +59,11 @@ import Classes from '../screens/AdminClasses.vue'
             this.$refs.drawer.nativeView.showDrawer();
         },
         loadUserBookings(id){
-            alert(id)
+            this.$navigateTo(AdminClientsView, {
+                props: {
+                    userId: id
+                }
+        })
         },
         redirect(screen){
             switch(screen) {

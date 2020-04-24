@@ -27,6 +27,8 @@ import App from './Home.vue'
 import Register from './Register.vue'
 import ForgotPassword from './ForgotPassword.vue'
 
+import { isIOS } from "tns-core-modules/platform"
+
 export default {
     data() {
         return {
@@ -55,6 +57,9 @@ export default {
         ForgotPassword(){
             this.$navigateTo(ForgotPassword, {clearHistory: true})
         }
+    },
+    created () {
+        console.log(isIOS);
     },
 }
 </script>
