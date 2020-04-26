@@ -5,7 +5,7 @@
         <Label class="drawer-item border" text="Clients" @tap="navigate('Clients')"/>
         <Label class="drawer-item" text="Bookings" @tap="navigate('Bookings')"/>
         <Label class="drawer-item" text="Classes" @tap="navigate('Classes')"/>
-        <Label class="drawer-item" text="Scan QR Code" @tap="navigate('Scan')"/>
+        <!-- <Label class="drawer-item" text="Scan QR Code" @tap="navigate('Scan')"/> -->
     </StackLayout>
 </template>
 
@@ -13,7 +13,6 @@
 import Clients from '../../screens/Clients.vue'
 import Bookings from '../../screens/Bookings.vue'
 import Classes from '../../screens/AdminClasses.vue'
-import Scan from '../../screens/Scan.vue'
 
     export default {
         methods: {
@@ -27,9 +26,6 @@ import Scan from '../../screens/Scan.vue'
                         break;
                     case 'Classes':
                         this.$navigateTo(Classes, {clearHistory: true})
-                        break;
-                    case 'Scan':
-                        this.$navigateTo(Scan, {clearHistory: true})
                         break;
                 }
             }

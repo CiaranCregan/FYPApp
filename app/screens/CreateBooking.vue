@@ -12,7 +12,8 @@
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
 
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
-                <!-- <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/> -->
+                <!-- <Label class="drawer-item" text="Clients" @tap="redirect('Clients')"/>
+                <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/> -->
             </StackLayout>
 
             <StackLayout ~mainContent class="content">
@@ -96,7 +97,6 @@ import App from '../screens/Home.vue'
                             booking_type: 'Private',
                             time: bookingTime
                         }
-
                         this.$store.dispatch('createBookingForUser', data)
                         .then((res) => {
                             this.$navigateTo(App, {clearHistory: true}) 
@@ -117,11 +117,11 @@ import App from '../screens/Home.vue'
                 case 'Home':
                     this.$navigateTo(App, {clearHistory: true})
                     break;
-                case 'Classes':
-                    this.$navigateTo(Classes, {clearHistory: true})
-                    break;
-                default:
-                    this.$navigateTo(App, {clearHistory: true})
+                // case 'Classes':
+                //     this.$navigateTo(Classes, {clearHistory: true})
+                //     break;
+                // default:
+                //     this.$navigateTo(App, {clearHistory: true})
             }
         }
     }
@@ -148,5 +148,10 @@ import App from '../screens/Home.vue'
         color: white;
         width: 95%;
         padding: 20;
+    }
+    .drawer-item {
+        padding: 8 16;
+        color: #333333;
+        font-size: 16;
     }
 </style>

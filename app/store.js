@@ -259,6 +259,17 @@ export default new Vuex.Store({
               reject(error)
         })
       })
+    },
+    confirmBooking({commit}, data){
+      return new Promise(function(resolve, reject){
+        axios.put('http://127.0.0.1:8888/example-project/public/api/admin/classes/book/' + data)
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((error) => {
+              reject(error)
+        })
+      })
     }
   }
 });

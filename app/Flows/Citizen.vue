@@ -1,18 +1,25 @@
 <template>
     <StackLayout>
-<GridLayout columns="*,*" rows="*,*" width="100%" height="400">
-    <card-view margin="10" col="0" row="0" backgroundColor="#275DAD">
-        <DockLayout width="100%" height="200" stretchLastChild="false">
-            <Label text="Profile" dock="top" height="60%" class="h3"/>
-            <Button text="Manage My Profile" dock="bottom" height="40%" backgroundColor="#3A7CA5" class="cardBtn" @tap="navigate('Profile')"/>
-        </DockLayout>
-    </card-view>
-  </GridLayout>
+        <GridLayout columns="*,*" rows="*,*" width="100%" height="400">
+            <card-view margin="10" col="0" row="0" backgroundColor="#275DAD">
+                <DockLayout width="100%" height="200" stretchLastChild="false">
+                    <Label text="Profile" dock="top" height="60%" class="h3"/>
+                    <Button text="Manage My Profile" dock="bottom" height="40%" backgroundColor="#3A7CA5" class="cardBtn" @tap="navigate('Profile')"/>
+                </DockLayout>
+            </card-view>
+            <card-view margin="10" col="1" row="0" backgroundColor="#275DAD">
+                <DockLayout width="100%" height="200" stretchLastChild="false">
+                    <Label text="Classes" dock="top" height="60%" class="h3"/>
+                    <Button text="View Classes" dock="bottom" height="40%" backgroundColor="#3A7CA5" class="cardBtn" @tap="navigate('Classes')"/>
+                </DockLayout>
+            </card-view>
+        </GridLayout>
     </StackLayout>
 </template>
 
 <script>
 import Profile from '../screens/Profile.vue'
+import CitizenClasses from '../screens/CitizenClasses.vue'
     export default {
         computed: {
             username(){
@@ -30,6 +37,9 @@ import Profile from '../screens/Profile.vue'
                 switch(screen) {
                     case 'Profile':
                         this.$navigateTo(Profile, {clearHistory: true})
+                        break;
+                    case 'Classes':
+                        this.$navigateTo(CitizenClasses, {clearHistory: true})
                         break;
                 }
             }
