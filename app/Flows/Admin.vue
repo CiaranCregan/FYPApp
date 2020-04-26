@@ -33,11 +33,13 @@
     <card-view margin="10" padding="20" height="100" background="green">
         <Label :text="`You have ${todaysBookings.length} scheduled ${todaysBookings.length === 0 || todaysBookings.length > 1 ? 'bookings' : 'booking'} today`" class="h3 white"/>
     </card-view>
+    <card-view margin="10" padding="20" height="100" background="green">
+        <Label :text="`You have ${todaysClasses.length} scheduled ${todaysClasses.length === 0 || todaysClasses.length > 1 ? 'classes' : 'class'} today`" class="h3 white"/>
+    </card-view>
     </StackLayout>
 </template>
 
 <script>
-import App from '../screens/Home.vue'
 import Clients from '../screens/Clients.vue'
 import Bookings from '../screens/Bookings.vue'
 import Classes from '../screens/AdminClasses.vue'
@@ -48,10 +50,14 @@ import Classes from '../screens/AdminClasses.vue'
             },
             todaysBookings(){
                 return this.$store.getters['todaysBookings']
+            },
+            todaysClasses(){
+                return this.$store.getters['todaysClasses']
             }
         },
         created () {
             this.$store.dispatch('getTodaysBookingsForAdmin');
+            this.$store.dispatch('getTodaysClassesForAdmin');
         },
         methods: {
             navigate() {
@@ -63,9 +69,6 @@ import Classes from '../screens/AdminClasses.vue'
             },
             navigate(screen){
                 switch(screen) {
-                    case 'App':
-                        this.$navigateTo(Home, {clearHistory: true})
-                        break;
                     case 'Clients':
                         this.$navigateTo(Clients, {clearHistory: true})
                         break;
@@ -75,8 +78,6 @@ import Classes from '../screens/AdminClasses.vue'
                     case 'Classes':
                         this.$navigateTo(Classes, {clearHistory: true})
                         break;
-                    default:
-                        this.$navigateTo(App, {clearHistory: true})
                 }
             }
         },

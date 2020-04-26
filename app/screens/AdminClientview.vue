@@ -18,6 +18,7 @@
             </StackLayout>
 
             <StackLayout ~mainContent class="content">
+                <Label class="h2" text="You have no bookings" v-if="users.length === 0"/>
                 <card-view margin="10" padding="20" height="100" background="green" v-for="(booking, index) in users" :key="index">
                     <DockLayout stretchLastChild="true">
                         <Label :text="`${booking.date} at ${booking.time}`" dock="top"/>
@@ -108,6 +109,11 @@ import Classes from '../screens/AdminClasses.vue'
     .content{
         width: 100%;
         height: auto;
+    }
+    .h2{
+        font-size: 25;
+        text-align: center;
+        padding: 20;
     }
     .card{
         margin: 5;

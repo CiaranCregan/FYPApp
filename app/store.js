@@ -23,7 +23,8 @@ export default new Vuex.Store({
     listUsers:[],
     users: [],
     bookingsByUserIdForAdmin: [],
-    todaysBookings: []
+    todaysBookings: [],
+    todaysClasses: []
   },
   getters: {
     accessToken: state => {
@@ -57,6 +58,9 @@ export default new Vuex.Store({
     },
     todaysBookings: state => {
       return state.todaysBookings
+    },
+    todaysClasses: state => {
+      return state.todaysClasses
     }
   },
   mutations: {
@@ -93,6 +97,9 @@ export default new Vuex.Store({
     },
     setTodaysBookings(state, data){
       state.todaysBookings = data
+    },
+    setTodaysClasses(state, data){
+      state.todaysClasses = data
     }
   },
   actions: {
@@ -112,6 +119,27 @@ export default new Vuex.Store({
               alert({
                 title: "Oops!",
                 message: "Something went wrong. Please try again",
+                okButtonText: "Close"
+              })
+              reject(error)
+        })
+      })
+    },
+    register({commit}, data){
+      console.log(data.name)
+      console.log(data.email)
+      console.log(data.password)
+      return new Promise(function(resolve, reject){
+        axios.post('http://127.0.0.1:8888/example-project/public/api/register', data)
+            .then((response) => {
+              console.log('Here in')
+              resolve(response)
+            })
+            .catch((error) => {
+              console.log(error.response.data)
+              alert({
+                title: "Oops!",
+                message: error.response.data,
                 okButtonText: "Close"
               })
               reject(error)
@@ -182,22 +210,52 @@ export default new Vuex.Store({
           console.log(error)
         })
     },
+    getTodaysClassesForAdmin({commit}, data){
+      axios.get('http://127.0.0.1:8888/example-project/public/api/admin/classes/today')
+        .then((response) => {
+          commit('setTodaysClasses', response.data)
+        })
+        .catch((error) =>{
+          console.log(error)
+        })
+    },
     createBookingForUser({commit}, data){
       return new Promise(function(resolve, reject){
         axios.post('http://127.0.0.1:8888/example-project/public/api/bookings', data)
             .then((response) => {
-              console.log(response.data)
               // commit('setUserAccessToken', response.data.access_token)
               // commit('setIsLoggedIn', true)
               resolve(response)
             })
             .catch((error) => {
-              console.log(error)
-              alert({
-                title: "Oops!",
-                message: "Something went wrong. Please try again",
-                okButtonText: "Close"
-              })
+              reject(error)
+        })
+      })
+    },
+    updateBookingForUser({commit}, data){
+      let newData = {
+        username: data.username,
+        date: data.date,
+        booking_type: data.booking_type,
+        time: data.time
+      }
+      return new Promise(function(resolve, reject){
+        axios.post('http://127.0.0.1:8888/example-project/public/api/admin/update/' + data.id, newData)
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((error) => {
+              reject(error)
+        })
+      })
+    },
+    removeClientBooking({commit}, data){
+      return new Promise(function(resolve, reject){
+        axios.delete('http://127.0.0.1:8888/example-project/public/api/admin/remove/' + data)
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((error) => {
               reject(error)
         })
       })

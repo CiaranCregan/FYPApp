@@ -18,6 +18,7 @@
             <StackLayout ~mainContent class="content">
                     <Button text="Create new booking" @tap="createBooking" class="cardBtn"/>
                     <Label text="Todays bookings" class="h2"/>
+                    <ActivityIndicator :busy="loading" color="red" width="100" height="100" v-if="loading"/>
                     <StackLayout height="2" backgroundColor="Black" class="divider"></StackLayout>
                     <StackLayout v-if="todaysBookings.length === 0">
                         <Label text="No bookings for today" class="card"/>
@@ -28,8 +29,8 @@
                                 <Label :text="bookings.username" class="card"/>
                                 <Label :text="`${showFormattedTime(bookings.time)} at ${bookings.time}`" class="card"/>
                                 <WrapLayout backgroundColor="#3c495e">
-                                    <Button text="Remove" width="50%" backgroundColor="red" class="btn"/>
-                                    <Button text="Update" width="50%" backgroundColor="orange" class="btn"/>
+                                    <Button text="Update" width="50%" backgroundColor="orange" class="btn" @tap="editBooking(bookings)"/>
+                                    <Button text="Remove" width="50%" backgroundColor="red" class="btn" @tap="deleteBooking(bookings.id)"/>
                                 </WrapLayout>
                             </StackLayout>
                         </card-view>
@@ -45,12 +46,15 @@ import App from '../screens/Home.vue'
 import Clients from '../screens/Clients.vue'
 import CreateBooking from '../screens/CreateBooking.vue'
 import Classes from '../screens/AdminClasses.vue'
+
+import EditBooking from '../screens/EditBooking.vue'
   export default {
     data() {
         return {
             showMenu: true,
             selectedDate: '',
-            selectedTime: ''
+            selectedTime: '',
+            loading: false
         }
     },
     computed: {
@@ -87,6 +91,31 @@ import Classes from '../screens/AdminClasses.vue'
         createBooking(){
             this.$navigateTo(CreateBooking)
         },
+        editBooking(booking){
+            this.$navigateTo(EditBooking, {
+                props: {
+                    booking: booking
+                }
+            })
+        },
+        deleteBooking(id){
+            confirm({
+                title: "Delete booking",
+                message: "Are you sure you want to remove this booking?",
+                okButtonText: "Delete",
+                cancelButtonText: "Cancel"
+            }).then(result => {
+                if (result){
+                    this.$store.dispatch('removeClientBooking', id)
+                    .then((res) => {
+                        this.$store.dispatch('getTodaysBookingsForAdmin');
+                    })
+                    .catch((err) => {
+                        alert('Something has gone wrong. Please try again')
+                    })
+                }
+            });
+        },  
         redirect(screen){
             switch(screen) {
                 case 'Home':

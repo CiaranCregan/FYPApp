@@ -7,7 +7,7 @@
                         <TextField v-model="fullName" hint="Full name" class="form-input"/>
                     </FlexBoxLayout>
                     <FlexBoxLayout alignItems="center">
-                        <TextField v-model="username" hint="Username" class="form-input"/>
+                        <TextField v-model="username" hint="Emaill address" class="form-input"/>
                     </FlexBoxLayout>
                     <FlexBoxLayout alignItems="center">
                         <TextField v-model="password" hint="Password" secure="true" class="form-input"/>
@@ -26,7 +26,7 @@
 </template>
 
 <script >
-import App from './Home.vue'
+import Login from './Login.vue'
 export default {
     data() {
         return {
@@ -37,7 +37,15 @@ export default {
     },
     methods: {
         register(){
-            alert('Register has been clicked')
+            let data = {
+                name: this.fullName,
+                email: this.username,
+                password: this.password
+            }
+            this.$store.dispatch('register', data)
+            .then((res) => {
+                this.$navigateTo(Login, {clearHistory: true})
+            })
         }
     },
 }

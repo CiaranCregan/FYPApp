@@ -63,7 +63,7 @@ import AdminClientsView from '../screens/AdminClientview.vue'
                 props: {
                     userId: id
                 }
-        })
+            })
         },
         redirect(screen){
             switch(screen) {

@@ -13,11 +13,29 @@
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
                 <Label class="drawer-item" text="Clients" @tap="redirect('Clients')"/>
                 <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
-                <!-- <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/> -->
             </StackLayout>
 
             <StackLayout ~mainContent class="content">
-                <Label text='Admin classes screen' />
+                <Button text="Create new class" @tap="createBooking" class="cardBtn"/>
+                <Label text="Todays classes" class="h2"/>
+                <StackLayout height="2" backgroundColor="Black" class="divider"></StackLayout>
+                <StackLayout v-if="todaysClasses.length === 0">
+                        <Label text="No bookings for today" class="card"/>
+                    </StackLayout>
+                    <StackLayout v-else>
+                        <card-view margin="10" col="1" row="1" backgroundColor="green" v-for="(classes, index) in todaysClasses" :key="index">
+                            <StackLayout>
+                                <Label :text="`${classes.title}`" class="card"/>
+                                <Label :text="`${showFormattedTime(classes.time)} at ${classes.time} - ${classes.class_length} minutes`" class="card"/>
+                                <!-- <Label :text="`Amount of Clients going: ${classes.going}`"/> -->
+                                <WrapLayout backgroundColor="#3c495e">
+                                    <Button text="View" width="33%" backgroundColor="orange" class="btn"/>
+                                    <Button text="Update" width="33%" backgroundColor="pink" class="btn"/>
+                                    <Button text="Remove" width="34%" backgroundColor="red" class="btn"/>
+                                </WrapLayout>
+                            </StackLayout>
+                        </card-view>
+                    </StackLayout>
             </StackLayout>
         </RadSideDrawer>
     </Page>
@@ -33,39 +51,31 @@ import Classes from '../screens/AdminClasses.vue'
         return {
             showMenu: true,
             selectedDate: '',
-            selectedTime: ''
+            selectedTime: '',
+            selectedIndex: 0
         }
     },
     computed: {
         username(){
             return `Welcome, ${this.$store.getters['username']}`
         },
-        users(){
-            return this.$store.getters['showUsers']
+        todaysClasses(){
+            return this.$store.getters['todaysClasses']
         }
-    },
-    created () {
-        this.$store.dispatch('getAllClients');
     },
     methods: {
         openSidebar(){
             this.$refs.drawer.nativeView.showDrawer();
         },
-        closeSidebar(){
-            this.$refs.drawer.nativeView.closeDrawer();
-        },
-        onScan() {
-            alert({
-                title: "Are you sure you want to scan?",
-                message: "This will open your phone's camera",
-                okButtonText: "Ok"
-            }).then(() => {
-                console.log("Alert dialog closed");
-            });
-        },
-        createBooking(){
-
-            alert(this.selectedTime);
+        showFormattedTime(date){
+            let newWord = date.split(":")
+            if (newWord[0] < 12){
+                return "Morning Session"
+            } else if (newWord[0] >= 12 && newWord[0] < 16) {
+                return 'Afternoon Session'
+            } else {
+                return 'Evening Session'
+            }
         },
         redirect(screen){
             switch(screen) {
@@ -91,11 +101,27 @@ import Classes from '../screens/AdminClasses.vue'
         width: 100%;
         height: auto;
     }
+    .h2{
+        font-size: 30;
+        margin-left: 10;
+    }
+    .divider{
+        width: 98%;
+        margin-top: 5;
+        margin-bottom: 5;
+    }
+    .card{
+        width: 95%;
+        margin: 20;
+        color: #000;
+        font-size: 20;
+    }
     .cardBtn{
         background: black;
         color: white;
         width: 95%;
         padding: 20;
-        margin-bottom: 15;
+        margin-top: 15;
+        margin-bottom: 10;
     }
 </style>
