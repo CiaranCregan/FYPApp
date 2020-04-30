@@ -13,24 +13,42 @@
                     <Button text="View Classes" dock="bottom" height="40%" backgroundColor="#3A7CA5" class="cardBtn" @tap="navigate('Classes')"/>
                 </DockLayout>
             </card-view>
+            <card-view margin="10" col="0" row="1" backgroundColor="#275DAD">
+                <DockLayout width="100%" height="200" stretchLastChild="false">
+                    <Label text="Bookings" dock="top" height="60%" class="h3"/>
+                    <Button text="View my Bookings" dock="bottom" height="40%" backgroundColor="#3A7CA5" class="cardBtn" @tap="navigate('Bookings')"/>
+                </DockLayout>
+            </card-view>
         </GridLayout>
+        <card-view margin="10" padding="20" height="100" background="green" @tap="navigate('Bookings')">
+            <Label :text="firstBooking" class="h3 white" textWrap="true"/>
+        </card-view>
     </StackLayout>
 </template>
 
 <script>
 import Profile from '../screens/Profile.vue'
 import CitizenClasses from '../screens/CitizenClasses.vue'
+import CitizenBookings from '../screens/CitizenBookings.vue'
     export default {
         computed: {
             username(){
                 return this.$store.getters['username']
             },
-            todaysBookings(){
-                return this.$store.getters['todaysBookings']
+            firstBooking(){
+                return this.$store.getters['firstUserBooking']
+            },
+            userId(){
+                return this.$store.getters['userId']
+            },
+            myclasses(){
+                return this.$store.getters['getConfirmsForClass']
             }
         },
         created () {
+            console.log(this.userId)
             this.$store.dispatch('getTodaysBookingsForAdmin');
+            this.$store.dispatch('classesConfirmed')
         },
         methods: {
             navigate(screen){
@@ -40,6 +58,9 @@ import CitizenClasses from '../screens/CitizenClasses.vue'
                         break;
                     case 'Classes':
                         this.$navigateTo(CitizenClasses, {clearHistory: true})
+                        break;
+                    case 'Bookings':
+                        this.$navigateTo(CitizenBookings, {clearHistory: true})
                         break;
                 }
             }

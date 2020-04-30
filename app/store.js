@@ -20,15 +20,24 @@ export default new Vuex.Store({
       booking_time: ''
     },
     bookings: [],
+    futureBookings: [],
+    pastBookings: [],
     listUsers:[],
     users: [],
     bookingsByUserIdForAdmin: [],
     todaysBookings: [],
-    todaysClasses: []
+    todaysClasses: [],
+    confirmsForClass: []
   },
   getters: {
     accessToken: state => {
       return state.accessToken
+    },
+    userId: state => {
+      return state.currentUser.id
+    },
+    name: state => {
+      return state.currentUser.name
     },
     username: state => {
       return state.currentUser.name
@@ -38,14 +47,20 @@ export default new Vuex.Store({
     },
     firstUserBooking: state => {
       if(state.firstUserBooking.booking_type === ''){
-        return 'No bookings'
+        return 'No bookings scheduled for today. Click to see your previous and future bookings'
       } else {
-        let data = state.firstUserBooking.booking_type === 'Private' ? '1-on-1 with Christopher Shannon' : state.firstUserBooking.booking_type + ' - ' + state.firstUserBooking.booking_date + '@' + state.firstUserBooking.booking_time
+        let data = `You have a 1-on-1 with Christopher Shannon @ ${state.firstUserBooking.booking_time} today`
         return data
       }
     },
     bookings: state => {
       return state.bookings
+    },
+    futurebookings: state => {
+      return state.futureBookings
+    },
+    pastbookings: state => {
+      return state.pastBookings
     },
     showUsers: state => {
       return state.users
@@ -61,6 +76,9 @@ export default new Vuex.Store({
     },
     todaysClasses: state => {
       return state.todaysClasses
+    },
+    getConfirmsForClass: state => {
+      return state.confirmsForClass
     }
   },
   mutations: {
@@ -100,6 +118,15 @@ export default new Vuex.Store({
     },
     setTodaysClasses(state, data){
       state.todaysClasses = data
+    },
+    setConfirmsForClass(state, data){
+      state.confirmsForClass = data
+    },
+    setFutureBookings(state, data){
+      state.futureBookings = data
+    },
+    setPastBookings(state, data){
+      state.pastBookings = data
     }
   },
   actions: {
@@ -157,6 +184,7 @@ export default new Vuex.Store({
           //   dispatch('getAllUsersForAdmin')
           // } else {
             dispatch('getUserBookings', response.data.id)
+            dispatch('classesConfirmed', response.data.id)
           // }
         })
         .catch((error) => {
@@ -164,7 +192,7 @@ export default new Vuex.Store({
         })
     },
     getUserBookings({commit}, data) {
-      axios.get('http://127.0.0.1:8888/example-project/public/api/user/' + data)
+      axios.get('http://127.0.0.1:8888/example-project/public/api/user/today/' + data)
         .then((response) => {
           commit('setUserBookings', response.data)
           commit('setFirstUserBooking', response.data)
@@ -260,15 +288,69 @@ export default new Vuex.Store({
         })
       })
     },
+    getConfimsForThisClass({commit}, data){
+      axios.get('http://127.0.0.1:8888/example-project/public/api/admin/classes/going/' + data)
+            .then((response) => {
+              commit('setConfirmsForClass', response.data)
+              resolve(response)
+            })
+            .catch((error) => {
+              reject(error)
+        })
+    },
     confirmBooking({commit}, data){
       return new Promise(function(resolve, reject){
-        axios.put('http://127.0.0.1:8888/example-project/public/api/admin/classes/book/' + data)
+        axios.put('http://127.0.0.1:8888/example-project/public/api/admin/classes/book/' + data.class_id + '/' + data.user_id)
             .then((response) => {
               resolve(response)
             })
             .catch((error) => {
               reject(error)
         })
+      })
+    },
+    removeBooking({commit}, data){
+      return new Promise(function(resolve, reject){
+        axios.put('http://127.0.0.1:8888/example-project/public/api/admin/classes/removebooking/' + data.class_id + '/' + data.user_id)
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((error) => {
+              reject(error)
+        })
+      })
+    },
+    classesConfirmed({commit}, data){
+      axios.get('http://127.0.0.1:8888/example-project/public/api/admin/classes/confirm/' + data)
+          .then((response) => {
+            commit('setConfirmsForClass', response.data)
+            resolve(response)
+          })
+          .catch((error) => {
+            console.log(error)
+            reject(error)
+      })
+    },
+    clientFutureBookings({commit, state}){
+      axios.get('http://127.0.0.1:8888/example-project/public/api/user/future/' + state.currentUser.id)
+          .then((response) => {
+            commit('setFutureBookings', response.data)
+            resolve(response)
+          })
+          .catch((error) => {
+            console.log(error)
+            reject(error)
+      })
+    },
+    clientPastBookings({commit, state}){
+      axios.get('http://127.0.0.1:8888/example-project/public/api/user/all/' + state.currentUser.id)
+          .then((response) => {
+            commit('setPastBookings', response.data)
+            resolve(response)
+          })
+          .catch((error) => {
+            console.log(error)
+            reject(error)
       })
     }
   }

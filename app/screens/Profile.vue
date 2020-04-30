@@ -13,7 +13,26 @@
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
             </StackLayout>
             <StackLayout ~mainContent class="content">
-                <Label class="title" text="profile screen" col="1" />
+                <!-- Non editable -->
+                <Label class="h4" text="Name:" />
+                <TextField :text="name" class="form-input" isEnabled="false"/>
+                <Label class="h4" text="Username:" />
+                <TextField text="Username" class="form-input" isEnabled="false"/>
+                <!-- Editable -->
+                <Label class="h4" text="Date of Birth:" />
+                <TextField v-model="dob" class="form-input"/>
+                <Label class="h4" text="Mobile number:" />
+                <TextField v-model="mobileNumber" keyboardType="phone" class="form-input"/>
+                <Label class="h4" text="Height:" />
+                <TextField v-model="height" keyboardType="number" class="form-input"/>
+                <Label class="h4" text="Weight:" />
+                <TextField v-model="weight" keyboardType="number" class="form-input"/>
+                <Label class="h4" text="Your weight goal:" />
+                <TextField v-model="weightGoal" keyboardType="number" class="form-input"/>
+                <Label class="h4" text="Action Plan:" />
+                <TextField v-model="actionPlan" keyboardType="number" class="form-input"/>
+
+                <Button text="Update profile" @tap="createBooking" class="cardBtn"/>
             </StackLayout>
         </RadSideDrawer>
         </ScrollView>
@@ -25,10 +44,18 @@ import App from '../screens/Home.vue'
   export default {
     data() {
         return {
-     
-        }
+            dob: '',
+            mobileNumber: '',
+            height: '',
+            weight: '',
+            weightGoal: '',
+            actionPlan: ''
+        }   
     },
     computed: {
+        name(){
+            return this.$store.getters['name']
+        },
         username(){
             return `Welcome, ${this.$store.getters['username']}`
         }
@@ -59,22 +86,10 @@ import App from '../screens/Home.vue'
         font-size: 30;
         margin-left: 10;
     }
-    .divider{
-        width: 98%;
-        margin-top: 5;
-        margin-bottom: 5;
-    }
-    .card{
-        width: 95%;
-        margin: 20;
-        color: #000;
-        font-size: 20;
-    }
-    .card-inner{
-        width: 95%;
-        margin-left: 20;
-        color: #000;
-        font-size: 15;
+    .h4{
+        font-size: 18;
+        margin-top: 10;
+        margin-left: 10;
     }
     .cardBtn{
         background: black;
@@ -84,7 +99,14 @@ import App from '../screens/Home.vue'
         margin-top: 15;
         margin-bottom: 10;
     }
-    .btn{
-        color: white;
+    .form-input{
+        background: white;
+        color: black;
+        margin: 10;
+        padding: 15;
+        width: 95%;
+        border-width: 2;
+        border-color: #F1F1F1;
+        margin-bottom: 10;
     }
 </style>

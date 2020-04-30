@@ -10,20 +10,30 @@
         <RadSideDrawer ref="drawer">
             <StackLayout ~drawerContent backgroundColor="#d9544d">
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
+
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
             </StackLayout>
             <StackLayout ~mainContent class="content">
-                    <StackLayout v-if="todaysClasses.length === 0">
-                        <Label text="No classes for today" class="card"/>
+                    <!-- <Button text="View all your bookings" @tap="viewAllBookings" class="cardBtn"/>
+                    <Label text="Todays bookings:" class="h2"/>
+                    <StackLayout height="2" backgroundColor="Black" class="divider"></StackLayout> -->
+                    <GridLayout margin="10" columns="*, *">
+                        <Button text="View future bookings" @tap="viewAllFutureBookings" row="0" col="0" class="cardleft"/>
+                        <Button text="View past bookings" @tap="viewAllPastBookings" row="0" col="1"  class="cardright"/>
+                        <!-- <Label margin="10" text="0,0" row="0" col="0" />
+                        <Label margin="10" text="0,1" row="0" col="1" /> -->
+                    </GridLayout>
+                    <!-- <Button text="View all your bookings" @tap="viewAllBookings" class="cardBtn"/> -->
+                    <Label text="Todays bookings" class="h2"/>
+                    <!-- <ActivityIndicator :busy="loading" color="red" width="100" height="100" v-if="loading"/> -->
+                    <StackLayout height="2" backgroundColor="Black" class="divider"></StackLayout>
+                    <StackLayout v-if="todaysBookings.length === 0">
+                        <Label text="No bookings for today" class="card"/>
                     </StackLayout>
-                    <StackLayout v-else>
-                        <card-view margin="10" col="1" row="1" backgroundColor="green" v-for="(classes, index) in todaysClasses" :key="index">
+                    <StackLayout>
+                        <card-view margin="10" col="1" row="1" backgroundColor="green" v-for="(bookings, index) in todaysBookings" :key="index">
                             <StackLayout>
-                                <Label :text="`${classes.title}`" class="card"/>
-                                <Label :text="`${showFormattedTime(classes.time)} at ${classes.time} - ${classes.class_length} minutes`" class="card"/>
-                                <WrapLayout backgroundColor="#3c495e">
-                                    <Button text="View Information" width="100%" backgroundColor="orange" class="btn" @tap="viewInformation(classes)"/>
-                                </WrapLayout>
+                                <Label :text="`${showFormattedTime(bookings.time)} at ${bookings.time}`" class="card"/>
                             </StackLayout>
                         </card-view>
                     </StackLayout>
@@ -35,27 +45,27 @@
 
 <script >
 import App from '../screens/Home.vue'
-import ClassInformation from '../screens/ClassInformation.vue'
+import FutureBookings from '../screens/CitizenBookingsFuture.vue'
+import PastBookings from '../screens/CitizenBookingsPast.vue'
+
   export default {
-    data() {
-        return {
-     
-        }
-    },
     computed: {
         username(){
             return `Welcome, ${this.$store.getters['username']}`
         },
-        todaysClasses(){
-            return this.$store.getters['todaysClasses']
+        todaysBookings(){
+            return this.$store.getters['bookings']
         }
-    },
-    created (){
-        this.$store.dispatch('getTodaysClassesForAdmin');
     },
     methods: {
         openSidebar(){
             this.$refs.drawer.nativeView.showDrawer();
+        },
+        viewAllFutureBookings(){
+            this.$navigateTo(FutureBookings)
+        },
+        viewAllPastBookings(){
+            this.$navigateTo(PastBookings)
         },
         showFormattedTime(date){
             let newWord = date.split(":")
@@ -66,28 +76,12 @@ import ClassInformation from '../screens/ClassInformation.vue'
             } else {
                 return 'Evening Session'
             }
-        },
-        viewInformation(classes){
-            this.$navigateTo(ClassInformation, {
-                props: {
-                    classes: classes
-                }
-            })
-        },
-        bookClass(id){
-            this.$store.dispatch('confirmBooking', id)
-            .then(() => {
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        },
+        }, 
         redirect(screen){
             switch(screen) {
                 case 'Home':
                     this.$navigateTo(App, {clearHistory: true})
                     break;
-           
             }
         }
     }
@@ -120,13 +114,21 @@ import ClassInformation from '../screens/ClassInformation.vue'
         color: #000;
         font-size: 15;
     }
-    .cardBtn{
-        background: black;
+    .cardleft{
+        background: #275DAD;
         color: white;
         width: 95%;
         padding: 20;
-        margin-top: 15;
-        margin-bottom: 10;
+        margin-left: 5;
+        font-size: 20;
+    }
+    .cardright{
+        background: #3A7CA5;
+        color: white;
+        width: 95%;
+        padding: 20;
+        margin-left: 5;
+        font-size: 20;
     }
     .btn{
         color: white;
