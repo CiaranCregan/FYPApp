@@ -11,8 +11,10 @@ export default new Vuex.Store({
     currentUser: {
       id: '',
       name: '',
+      emai: '',
       isAdmin: ''
     },
+    profileInformation: [],
     firstUserBooking: {
       user_id: '',
       booking_type: '',
@@ -27,6 +29,8 @@ export default new Vuex.Store({
     bookingsByUserIdForAdmin: [],
     todaysBookings: [],
     todaysClasses: [],
+    allFutureClasses: [],
+    myClasses: [],
     confirmsForClass: []
   },
   getters: {
@@ -35,6 +39,9 @@ export default new Vuex.Store({
     },
     userId: state => {
       return state.currentUser.id
+    },
+    email: state => {
+      return state.currentUser.email
     },
     name: state => {
       return state.currentUser.name
@@ -77,8 +84,17 @@ export default new Vuex.Store({
     todaysClasses: state => {
       return state.todaysClasses
     },
+    allClasses: state => {
+      return state.allFutureClasses
+    },
+    myClasses: state => {
+      return state.myClasses
+    },
     getConfirmsForClass: state => {
       return state.confirmsForClass
+    },
+    getProfileInformation: state => {
+      return state.profileInformation
     }
   },
   mutations: {
@@ -92,6 +108,7 @@ export default new Vuex.Store({
       console.log(data.isAdmin)
       state.currentUser.id = data.id
       state.currentUser.name = data.name
+      state.currentUser.email = data.email
       state.currentUser.isAdmin = data.isAdmin
     },
     setUserBookings(state, data){
@@ -119,6 +136,12 @@ export default new Vuex.Store({
     setTodaysClasses(state, data){
       state.todaysClasses = data
     },
+    setAllFutureClasses(state, data){
+      state.allFutureClasses = data
+    },
+    setMyClasses(state, data){
+      state.myClasses = data
+    },
     setConfirmsForClass(state, data){
       state.confirmsForClass = data
     },
@@ -127,6 +150,9 @@ export default new Vuex.Store({
     },
     setPastBookings(state, data){
       state.pastBookings = data
+    },
+    setProfileInformation(state, data){
+      state.profileInformation = data
     }
   },
   actions: {
@@ -153,13 +179,31 @@ export default new Vuex.Store({
       })
     },
     register({commit}, data){
-      console.log(data.name)
-      console.log(data.email)
-      console.log(data.password)
       return new Promise(function(resolve, reject){
         axios.post('http://127.0.0.1:8888/example-project/public/api/register', data)
             .then((response) => {
               console.log('Here in')
+              resolve(response)
+            })
+            .catch((error) => {
+              console.log(error.response.data)
+              alert({
+                title: "Oops!",
+                message: error.response.data,
+                okButtonText: "Close"
+              })
+              reject(error)
+        })
+      })
+    },
+    logout({commit, state}){
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + state.accessToken
+
+      return new Promise(function(resolve, reject){
+        axios.post('http://127.0.0.1:8888/example-project/public/api/logout')
+            .then((response) => {
+              state.accessToken = ''
+              state.isLoggedIn = false
               resolve(response)
             })
             .catch((error) => {
@@ -247,12 +291,33 @@ export default new Vuex.Store({
           console.log(error)
         })
     },
+    getFutureClasses({commit}, data){
+      axios.get('http://127.0.0.1:8888/example-project/public/api/user/classes')
+        .then((response) => {
+          console.log(response.data)
+          commit('setAllFutureClasses', response.data)
+        })
+        .catch((error) =>{
+          console.log(error)
+        })
+    },
     createBookingForUser({commit}, data){
       return new Promise(function(resolve, reject){
         axios.post('http://127.0.0.1:8888/example-project/public/api/bookings', data)
             .then((response) => {
               // commit('setUserAccessToken', response.data.access_token)
               // commit('setIsLoggedIn', true)
+              resolve(response)
+            })
+            .catch((error) => {
+              reject(error)
+        })
+      })
+    },
+    createClass({commit}, data){
+      return new Promise(function(resolve, reject){
+        axios.post('http://127.0.0.1:8888/example-project/public/api/admin/classes/create', data)
+            .then((response) => {
               resolve(response)
             })
             .catch((error) => {
@@ -278,6 +343,7 @@ export default new Vuex.Store({
       })
     },
     removeClientBooking({commit}, data){
+      console.log(data)
       return new Promise(function(resolve, reject){
         axios.delete('http://127.0.0.1:8888/example-project/public/api/admin/remove/' + data)
             .then((response) => {
@@ -288,8 +354,29 @@ export default new Vuex.Store({
         })
       })
     },
+    removeClass({commit}, data){
+      return new Promise(function(resolve, reject){
+        axios.delete('http://127.0.0.1:8888/example-project/public/api/admin/classes/remove/' + data)
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((error) => {
+              reject(error)
+        })
+      })
+    },
     getConfimsForThisClass({commit}, data){
       axios.get('http://127.0.0.1:8888/example-project/public/api/admin/classes/going/' + data)
+            .then((response) => {
+              commit('setConfirmsForClass', response.data)
+              resolve(response)
+            })
+            .catch((error) => {
+              reject(error)
+        })
+    },
+    checkAttendance({commit}, data){
+      axios.get('http://127.0.0.1:8888/example-project/public/api/user/classes/going/' + data)
             .then((response) => {
               commit('setConfirmsForClass', response.data)
               resolve(response)
@@ -320,15 +407,16 @@ export default new Vuex.Store({
         })
       })
     },
-    classesConfirmed({commit}, data){
-      axios.get('http://127.0.0.1:8888/example-project/public/api/admin/classes/confirm/' + data)
+    myClasses({commit, state}, data){
+      console.log('Hello')
+      axios.get('http://127.0.0.1:8888/example-project/public/api/user/classes/myclasses/' + state.currentUser.id)
           .then((response) => {
-            commit('setConfirmsForClass', response.data)
-            resolve(response)
+            commit('setMyClasses', response.data)
+            // resolve(response)
           })
           .catch((error) => {
             console.log(error)
-            reject(error)
+            // reject(error)
       })
     },
     clientFutureBookings({commit, state}){
@@ -351,6 +439,18 @@ export default new Vuex.Store({
           .catch((error) => {
             console.log(error)
             reject(error)
+      })
+    },
+    updateProfileInformation({commit, state}, data){
+      console.log(state.currentUser.id)
+      return new Promise(function(resolve, reject){
+        axios.post('http://127.0.0.1:8888/example-project/public/api/user/profile/update/' + state.currentUser.id, data)
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((error) => {
+              reject(error)
+        })
       })
     }
   }

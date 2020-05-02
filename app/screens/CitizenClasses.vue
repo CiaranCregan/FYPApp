@@ -11,16 +11,19 @@
             <StackLayout ~drawerContent backgroundColor="#d9544d">
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
+                <Label class="drawer-item" text="Profile" @tap="redirect('Profile')"/>
+                <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
             </StackLayout>
             <StackLayout ~mainContent class="content">
-                    <StackLayout v-if="todaysClasses.length === 0">
+                    <Button text="View your classes" @tap="myClasses" class="cardBtn"/>
+                    <StackLayout v-if="allClasses.length === 0">
                         <Label text="No classes for today" class="card"/>
                     </StackLayout>
                     <StackLayout v-else>
-                        <card-view margin="10" col="1" row="1" backgroundColor="green" v-for="(classes, index) in todaysClasses" :key="index">
+                        <card-view margin="10" col="1" row="1" backgroundColor="green" v-for="(classes, index) in allClasses" :key="index">
                             <StackLayout>
-                                <Label :text="`${classes.title}`" class="card"/>
-                                <Label :text="`${showFormattedTime(classes.time)} at ${classes.time} - ${classes.class_length} minutes`" class="card"/>
+                                <Label :text="`${classes.title}`" class="card" textWrap="true"/>
+                                <Label :text="`${showFormattedTime(classes.time)} at ${classes.time} - ${classes.class_length} minutes`" class="card" textWrap="true"/>
                                 <WrapLayout backgroundColor="#3c495e">
                                     <Button text="View Information" width="100%" backgroundColor="orange" class="btn" @tap="viewInformation(classes)"/>
                                 </WrapLayout>
@@ -35,6 +38,10 @@
 
 <script >
 import App from '../screens/Home.vue'
+import Profile from '../screens/Profile.vue'
+import Bookings from '../screens/CitizenBookings.vue'
+
+import MyClasses from '../screens/MyClasses.vue'
 import ClassInformation from '../screens/ClassInformation.vue'
   export default {
     data() {
@@ -46,12 +53,12 @@ import ClassInformation from '../screens/ClassInformation.vue'
         username(){
             return `Welcome, ${this.$store.getters['username']}`
         },
-        todaysClasses(){
-            return this.$store.getters['todaysClasses']
+        allClasses(){
+            return this.$store.getters['allClasses']
         }
     },
     created (){
-        this.$store.dispatch('getTodaysClassesForAdmin');
+        this.$store.dispatch('getFutureClasses');
     },
     methods: {
         openSidebar(){
@@ -66,6 +73,9 @@ import ClassInformation from '../screens/ClassInformation.vue'
             } else {
                 return 'Evening Session'
             }
+        },
+        myClasses(){
+            this.$navigateTo(MyClasses)
         },
         viewInformation(classes){
             this.$navigateTo(ClassInformation, {
@@ -87,7 +97,12 @@ import ClassInformation from '../screens/ClassInformation.vue'
                 case 'Home':
                     this.$navigateTo(App, {clearHistory: true})
                     break;
-           
+                case 'Profile':
+                    this.$navigateTo(Profile, {clearHistory: true})
+                    break;
+                case 'Bookings':
+                    this.$navigateTo(Bookings, {clearHistory: true})
+                    break;
             }
         }
     }

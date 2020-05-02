@@ -11,18 +11,25 @@
             <StackLayout ~drawerContent backgroundColor="#d9544d">
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
+                <Label class="drawer-item" text="Profile" @tap="redirect('Profile')"/>
+                <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
             </StackLayout>
             <StackLayout ~mainContent class="content">
-                        <card-view margin="10" col="1" row="1" backgroundColor="green">
+                <Button text="View classes" @tap="viewClasses" class="cardBtn"/>
+                    <StackLayout v-if="myClasses.length === 0">
+                        <Label text="You aren't booked into any classes." class="card"/>
+                    </StackLayout>
+                    <StackLayout v-else>
+                        <card-view margin="10" col="1" row="1" backgroundColor="green" v-for="(myClass, index) in myClasses" :key="index">
                             <StackLayout>
-                                <Label :text="`There are ${classes.going} people going to this class already. Why not join them?`" class="card" textWrap="true"/>
-                                <!-- <Label v-if="confirmsForThisCass" text="Thank you for going to this class." class="card" textWrap="true"/> -->
+                                <Label :text="`${myClass[0].title}`" class="card"/>
+                                <Label :text="`${showFormattedTime(myClass[0].time)} at ${myClass[0].time} - ${myClass[0].class_length} minutes`" class="card" textWrap="true"/>
                                 <WrapLayout backgroundColor="#3c495e">
-                                    <Button v-if="!confirmsForThisClass" text="Book Class" width="100%" backgroundColor="orange" class="btn" @tap="bookClass(classes.id, userId)"/>
-                                    <Button v-if="confirmsForThisClass" text="Remove Booking" width="100%" backgroundColor="red" class="btn" @tap="removeBooking(classes.id, userId)"/>
+                                    <Button text="Remove Booking" width="100%" backgroundColor="red" class="btn" @tap="removeBooking(myClass[0].id, userId)"/>
                                 </WrapLayout>
                             </StackLayout>
                         </card-view>
+                    </StackLayout>
             </StackLayout>
         </RadSideDrawer>
         </ScrollView>
@@ -31,10 +38,11 @@
 
 <script >
 import App from '../screens/Home.vue'
-import MyClasses from '../screens/MyClasses.vue'
+import Profile from '../screens/Profile.vue'
+import Bookings from '../screens/CitizenBookings.vue'
 
+import OtherClasses from '../screens/CitizenClasses.vue'
   export default {
-      props: ['classes'],
     data() {
         return {
      
@@ -47,29 +55,29 @@ import MyClasses from '../screens/MyClasses.vue'
         userId(){
             return this.$store.getters['userId']
         },
-        confirmsForThisClass(){
-            let going = this.$store.getters['getConfirmsForClass']
-
-            let confirm = going.filter( confirm => confirm.user_id === this.userId )
-
-            // for(var i = 0; i < going.length; i++) {
-            //     if (going[i].user_id === this.userId) {
-            //         return true
-            //     } else {
-            //         return false
-            //     }
-            //     // return false
-            // }
-
-            return confirm.length > 0 ? true : false
+        myClasses(){
+            return this.$store.getters['myClasses']
         }
     },
     created (){
-        this.$store.dispatch('checkAttendance', this.classes.id);
+        this.$store.dispatch('myClasses');
     },
     methods: {
         openSidebar(){
             this.$refs.drawer.nativeView.showDrawer();
+        },
+        showFormattedTime(date){
+            let newWord = date.split(":")
+            if (newWord[0] < 12){
+                return "Morning Session"
+            } else if (newWord[0] >= 12 && newWord[0] < 16) {
+                return 'Afternoon Session'
+            } else {
+                return 'Evening Session'
+            }
+        },
+        viewClasses(){
+            this.$navigateTo(OtherClasses)
         },
         removeBooking(cId, uId){
             let data = {
@@ -83,26 +91,7 @@ import MyClasses from '../screens/MyClasses.vue'
                     message: "Thank you for removing your booking. I am sad to see you go, it would have been an awesome class. You can always book again.",
                     okButtonText: "Ok"
                 }).then(() => {
-                    this.$navigateTo(MyClasses, {clearHistory: true})
-                });
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        },
-        bookClass(cId, uId){
-            let data = {
-                class_id: cId,
-                user_id: uId
-            }
-            this.$store.dispatch('confirmBooking', data)
-            .then(() => {
-                alert({
-                    title: "Your booking has been confirmed",
-                    message: "Thank you for joining this class. This will be an extra workout for you. I'm glad to see",
-                    okButtonText: "Ok"
-                }).then(() => {
-                    this.$navigateTo(MyClasses, {clearHistory: true})
+                    this.$store.dispatch('myClasses');
                 });
             })
             .catch((err) => {
@@ -114,7 +103,12 @@ import MyClasses from '../screens/MyClasses.vue'
                 case 'Home':
                     this.$navigateTo(App, {clearHistory: true})
                     break;
-           
+                case 'Profile':
+                    this.$navigateTo(Profile, {clearHistory: true})
+                    break;
+                case 'Bookings':
+                    this.$navigateTo(Bookings, {clearHistory: true})
+                    break;
             }
         }
     }

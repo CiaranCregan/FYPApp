@@ -12,18 +12,15 @@
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
 
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
+                <Label class="drawer-item" text="Profile" @tap="redirect('Profile')"/>
+                <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/>
+
             </StackLayout>
             <StackLayout ~mainContent class="content">
-                    <!-- <Button text="View all your bookings" @tap="viewAllBookings" class="cardBtn"/>
-                    <Label text="Todays bookings:" class="h2"/>
-                    <StackLayout height="2" backgroundColor="Black" class="divider"></StackLayout> -->
                     <GridLayout margin="10" columns="*, *">
-                        <Button text="View future bookings" @tap="viewAllFutureBookings" row="0" col="0" class="cardleft"/>
-                        <Button text="View past bookings" @tap="viewAllPastBookings" row="0" col="1"  class="cardright"/>
-                        <!-- <Label margin="10" text="0,0" row="0" col="0" />
-                        <Label margin="10" text="0,1" row="0" col="1" /> -->
+                        <Button text="View future bookings" @tap="viewAllFutureBookings" row="0" col="0" class="cardleft" textWrap="true"/>
+                        <Button text="View past bookings" @tap="viewAllPastBookings" row="0" col="1"  class="cardright" textWrap="true"/>
                     </GridLayout>
-                    <!-- <Button text="View all your bookings" @tap="viewAllBookings" class="cardBtn"/> -->
                     <Label text="Todays bookings" class="h2"/>
                     <!-- <ActivityIndicator :busy="loading" color="red" width="100" height="100" v-if="loading"/> -->
                     <StackLayout height="2" backgroundColor="Black" class="divider"></StackLayout>
@@ -45,6 +42,9 @@
 
 <script >
 import App from '../screens/Home.vue'
+import Profile from '../screens/Profile.vue'
+import Classes from '../screens/CitizenClasses.vue'
+
 import FutureBookings from '../screens/CitizenBookingsFuture.vue'
 import PastBookings from '../screens/CitizenBookingsPast.vue'
 
@@ -81,6 +81,12 @@ import PastBookings from '../screens/CitizenBookingsPast.vue'
             switch(screen) {
                 case 'Home':
                     this.$navigateTo(App, {clearHistory: true})
+                    break;
+                case 'Profile':
+                    this.$navigateTo(Profile, {clearHistory: true})
+                    break;
+                case 'Classes':
+                    this.$navigateTo(Classes, {clearHistory: true})
                     break;
             }
         }

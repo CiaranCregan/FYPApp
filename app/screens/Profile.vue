@@ -11,28 +11,30 @@
             <StackLayout ~drawerContent backgroundColor="#d9544d">
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
+                <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
+                <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/>
             </StackLayout>
             <StackLayout ~mainContent class="content">
                 <!-- Non editable -->
                 <Label class="h4" text="Name:" />
-                <TextField :text="name" class="form-input" isEnabled="false"/>
+                <TextField :text="name" class="form-input-disabled" isEnabled="false"/>
                 <Label class="h4" text="Username:" />
-                <TextField text="Username" class="form-input" isEnabled="false"/>
+                <TextField :text="email" class="form-input-disabled" isEnabled="false"/>
                 <!-- Editable -->
                 <Label class="h4" text="Date of Birth:" />
                 <TextField v-model="dob" class="form-input"/>
                 <Label class="h4" text="Mobile number:" />
                 <TextField v-model="mobileNumber" keyboardType="phone" class="form-input"/>
                 <Label class="h4" text="Height:" />
-                <TextField v-model="height" keyboardType="number" class="form-input"/>
+                <TextField v-model="height" class="form-input"/>
                 <Label class="h4" text="Weight:" />
-                <TextField v-model="weight" keyboardType="number" class="form-input"/>
+                <TextField v-model="weight" class="form-input"/>
                 <Label class="h4" text="Your weight goal:" />
-                <TextField v-model="weightGoal" keyboardType="number" class="form-input"/>
+                <TextField v-model="weightGoal" class="form-input"/>
                 <Label class="h4" text="Action Plan:" />
-                <TextField v-model="actionPlan" keyboardType="number" class="form-input"/>
+                <TextView v-model="actionPlan" class="form-input" maxLength="150"/>
 
-                <Button text="Update profile" @tap="createBooking" class="cardBtn"/>
+                <Button text="Update profile" @tap="updateProfileInformation" class="cardBtn"/>
             </StackLayout>
         </RadSideDrawer>
         </ScrollView>
@@ -40,7 +42,11 @@
 </template>
 
 <script >
+import axios from 'axios'
 import App from '../screens/Home.vue'
+import Bookings from '../screens/CitizenBookings.vue'
+import Classes from '../screens/CitizenClasses.vue'
+
   export default {
     data() {
         return {
@@ -52,9 +58,29 @@ import App from '../screens/Home.vue'
             actionPlan: ''
         }   
     },
+    created () {
+        let id = this.$store.getters['userId']
+        axios.get('http://127.0.0.1:8888/example-project/public/api/user/profile/' + id)
+            .then((response) => {
+                if (response.data.length > 0){
+                    this.dob = response.data[0].dob
+                    this.mobileNumber = response.data[0].mobile_number
+                    this.height = response.data[0].height
+                    this.weight = response.data[0].weight
+                    this.weightGoal = response.data[0].goal_weight
+                    this.actionPlan = response.data[0].action_plan
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+        })
+    },
     computed: {
         name(){
             return this.$store.getters['name']
+        },
+        email(){
+            return this.$store.getters['email']
         },
         username(){
             return `Welcome, ${this.$store.getters['username']}`
@@ -64,13 +90,40 @@ import App from '../screens/Home.vue'
         openSidebar(){
             this.$refs.drawer.nativeView.showDrawer();
         },
-
+        updateProfileInformation(){
+            let data = {
+                dob : this.dob,
+                mobile_number : this.mobileNumber,
+                height : this.height,
+                weight : this.weight,
+                goal_weight : this.weightGoal,
+                action_plan : this.actionPlan
+            }
+            this.$store.dispatch('updateProfileInformation', data)
+                .then((res) => {
+                    alert({
+                        title: "Profile updates",
+                        message: "Your profile has been updated successfully",
+                        okButtonText: "Ok"
+                    }).then(() => {
+                        this.$navigateTo(App, {clearHistory: true})
+                    });
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        },
         redirect(screen){
             switch(screen) {
                 case 'Home':
                     this.$navigateTo(App, {clearHistory: true})
                     break;
-           
+                case 'Bookings':
+                    this.$navigateTo(Bookings, {clearHistory: true})
+                    break;
+                case 'Classes':
+                    this.$navigateTo(Classes, {clearHistory: true})
+                    break;
             }
         }
     }
@@ -101,6 +154,16 @@ import App from '../screens/Home.vue'
     }
     .form-input{
         background: white;
+        color: black;
+        margin: 10;
+        padding: 15;
+        width: 95%;
+        border-width: 2;
+        border-color: #F1F1F1;
+        margin-bottom: 10;
+    }
+    .form-input-disabled{
+        background: #F1F1F1;
         color: black;
         margin: 10;
         padding: 15;

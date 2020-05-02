@@ -29,9 +29,9 @@
                                 <Label :text="`${showFormattedTime(classes.time)} at ${classes.time} - ${classes.class_length} minutes`" class="card"/>
                                 <!-- <Label :text="`Amount of Clients going: ${classes.going}`"/> -->
                                 <WrapLayout backgroundColor="#3c495e">
-                                    <Button text="View" width="33%" backgroundColor="orange" class="btn"/>
+                                    <Button text="View" width="33%" backgroundColor="orange" @tap="viewClassInfo(classes)" class="btn"/>
                                     <Button text="Update" width="33%" backgroundColor="pink" class="btn"/>
-                                    <Button text="Remove" width="34%" backgroundColor="red" class="btn"/>
+                                    <Button text="Remove" width="34%" backgroundColor="red" @tap="deleteClass(classes.id)" class="btn"/>
                                 </WrapLayout>
                             </StackLayout>
                         </card-view>
@@ -46,12 +46,17 @@ import App from '../screens/Home.vue'
 import Clients from '../screens/Clients.vue'
 import Bookings from '../screens/Bookings.vue'
 import Classes from '../screens/AdminClasses.vue'
+
+import CreateClass from '../screens/CreateClass.vue'
+import ClassInformation from '../screens/AdminClassesInfo.vue'
   export default {
     data() {
         return {
             showMenu: true,
+            title: '',
             selectedDate: '',
             selectedTime: '',
+            length: '',
             selectedIndex: 0
         }
     },
@@ -76,6 +81,34 @@ import Classes from '../screens/AdminClasses.vue'
             } else {
                 return 'Evening Session'
             }
+        },
+        createBooking(){
+            this.$navigateTo(CreateClass)
+        },
+        deleteClass(id){
+            confirm({
+                title: "Delete class",
+                message: "Are you sure you want to remove this class?",
+                okButtonText: "Delete",
+                cancelButtonText: "Cancel"
+            }).then(result => {
+                if (result){
+                    this.$store.dispatch('removeClass', id)
+                    .then((res) => {
+                        this.$store.dispatch('getTodaysClassesForAdmin');
+                    })
+                    .catch((err) => {
+                        alert('Something has gone wrong. Please try again')
+                    })
+                }
+            });
+        },
+        viewClassInfo(classes){
+            this.$navigateTo(ClassInformation, {
+                props: {
+                    classes: classes
+                }
+            })
         },
         redirect(screen){
             switch(screen) {

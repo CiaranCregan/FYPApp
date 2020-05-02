@@ -28,7 +28,7 @@
 
 <script>
 import Profile from '../screens/Profile.vue'
-import CitizenClasses from '../screens/CitizenClasses.vue'
+import MyClasses from '../screens/MyClasses.vue'
 import CitizenBookings from '../screens/CitizenBookings.vue'
     export default {
         computed: {
@@ -48,7 +48,7 @@ import CitizenBookings from '../screens/CitizenBookings.vue'
         created () {
             console.log(this.userId)
             this.$store.dispatch('getTodaysBookingsForAdmin');
-            this.$store.dispatch('classesConfirmed')
+            // this.$store.dispatch('classesConfirmed')
         },
         methods: {
             navigate(screen){
@@ -57,7 +57,7 @@ import CitizenBookings from '../screens/CitizenBookings.vue'
                         this.$navigateTo(Profile, {clearHistory: true})
                         break;
                     case 'Classes':
-                        this.$navigateTo(CitizenClasses, {clearHistory: true})
+                        this.$navigateTo(MyClasses, {clearHistory: true})
                         break;
                     case 'Bookings':
                         this.$navigateTo(CitizenBookings, {clearHistory: true})

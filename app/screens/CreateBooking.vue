@@ -2,7 +2,7 @@
     <Page>
         <ActionBar>
             <GridLayout class="nav" width="100%" columns="auto, *">
-                <Image v-if="showMenu" src="~/Images/menu.png" stretch="fill" width="30" @tap="openSidebar"/>
+                <Image src="~/Images/menu.png" stretch="fill" width="30" @tap="openSidebar"/>
                 <Label class="title" :text="username" col="1" />
             </GridLayout>
         </ActionBar>
@@ -40,7 +40,6 @@ import App from '../screens/Home.vue'
   export default {
     data() {
         return {
-            showMenu: true,
             selectedUser: 0,
             selectedDate: new Date(),
             currentDate: new Date(),
@@ -82,7 +81,7 @@ import App from '../screens/Home.vue'
                     console.log("Alert dialog closed");
                 });
             } else {
-                let bookingDate = `${this.selectedDate.getFullYear()}-${this.selectedDate.getMonth()+1 < 10 ? `0${this.selectedDate.getMonth()+1}` : this.selectedDate.getMonth()+1}-${this.selectedDate.getDate()}`
+                let bookingDate = `${this.selectedDate.getFullYear()}-${this.selectedDate.getMonth()+1 < 10 ? `0${this.selectedDate.getMonth()+1}` : this.selectedDate.getMonth()+1}-${this.selectedDate.getDate() < 10 ? `0${this.selectedDate.getDate()}` : this.selectedDate.getDate()}`
                 let bookingTime = `${this.selectedTime.getHours() < 10 ? '0' + this.selectedTime.getHours() : this.selectedTime.getHours()}:${this.selectedTime.getMinutes() === 0 ? '00' : this.selectedTime.getMinutes()}:00`
                 confirm({
                     title: "Confirm Booking",

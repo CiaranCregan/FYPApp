@@ -111,6 +111,7 @@ import EditBooking from '../screens/EditBooking.vue'
                         this.$store.dispatch('getTodaysBookingsForAdmin');
                     })
                     .catch((err) => {
+                        console.log(err)
                         alert('Something has gone wrong. Please try again')
                     })
                 }
