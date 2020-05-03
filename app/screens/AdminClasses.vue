@@ -30,7 +30,7 @@
                                 <!-- <Label :text="`Amount of Clients going: ${classes.going}`"/> -->
                                 <WrapLayout backgroundColor="#3c495e">
                                     <Button text="View" width="33%" backgroundColor="orange" @tap="viewClassInfo(classes)" class="btn"/>
-                                    <Button text="Update" width="33%" backgroundColor="pink" class="btn"/>
+                                    <Button text="Update" width="33%" backgroundColor="pink" @tap="updateClass(classes)" class="btn"/>
                                     <Button text="Remove" width="34%" backgroundColor="red" @tap="deleteClass(classes.id)" class="btn"/>
                                 </WrapLayout>
                             </StackLayout>
@@ -49,6 +49,7 @@ import Classes from '../screens/AdminClasses.vue'
 
 import CreateClass from '../screens/CreateClass.vue'
 import ClassInformation from '../screens/AdminClassesInfo.vue'
+import UpdateClass from '../screens/UpdateClass.vue'
   export default {
     data() {
         return {
@@ -81,6 +82,12 @@ import ClassInformation from '../screens/AdminClassesInfo.vue'
             } else {
                 return 'Evening Session'
             }
+        },
+        updateClass(classes){
+            this.$navigateTo(UpdateClass, { props: {
+                    classes: classes
+                    }
+            })
         },
         createBooking(){
             this.$navigateTo(CreateClass)

@@ -16,9 +16,10 @@
 
             <StackLayout ~mainContent class="content">
                 <DockLayout stretchLastChild="true" height="100%">
-                    <Label text="Create a new class" dock="top" backgroundColor="#E48A8A" class="h2"/>
-                    <Button text="Create" dock="bottom" @tap="createClass" class="cardBtn"/>
+                    <Label text="Update class" dock="top" backgroundColor="#E48A8A" class="h2"/>
+                    <Button text="Update" dock="bottom" @tap="createClass" class="cardBtn"/>
                     <StackLayout dock="center" width="100%" height="100%">
+                        <!-- <Label class="h4" :text="title" /> -->
                         <Label class="h4" text="Class title:" />
                         <TextField v-model="title" class="form-input"/>
                         <Label text="Pick a date:" class="h4"/>
@@ -37,7 +38,9 @@
 
 <script >
 import App from '../screens/Home.vue'
+import Classes from '../screens/AdminClasses.vue'
   export default {
+      props: ['classes'],
     data() {
         return {
             title: '',
@@ -51,6 +54,13 @@ import App from '../screens/Home.vue'
         username(){
             return `Welcome, ${this.$store.getters['username']}`
         }
+    },
+    created () {
+        this.title = this.classes.title;
+        this.length = this.classes.class_length;
+        this.selectedDate = this.classes.date;
+        this.selectedTime = this.classes.time;
+
     },
     methods: {
         openSidebar(){
@@ -67,26 +77,42 @@ import App from '../screens/Home.vue'
                     console.log("Alert dialog closed");
                 });
             } else {
-                let bookingDate = `${this.selectedDate.getFullYear()}-${this.selectedDate.getMonth()+1 < 10 ? `0${this.selectedDate.getMonth()+1}` : this.selectedDate.getMonth()+1}-${this.selectedDate.getDate() < 10 ? `0${this.selectedDate.getDate()}` : this.selectedDate.getDate()}`
-                let bookingTime = `${this.selectedTime.getHours() < 10 ? '0' + this.selectedTime.getHours() : this.selectedTime.getHours()}:${this.selectedTime.getMinutes() === 0 ? '00' : this.selectedTime.getMinutes()}:00`
+                let bookingDate = ''
+                let bookingTime = ''
+
+                if (this.selectedDate === this.classes.date){
+                    bookingDate = this.selectedDate
+                } else {
+                    bookingDate = `${this.selectedDate.getFullYear()}-${this.selectedDate.getMonth()+1 < 10 ? `0${this.selectedDate.getMonth()+1}` : this.selectedDate.getMonth()+1}-${this.selectedDate.getDate() < 10 ? `0${this.selectedDate.getDate()}` : this.selectedDate.getDate()}`
+                }
+
+                if (this.selectedTime === this.classes.time){
+                    bookingTime = this.classes.time
+                } else {
+                    bookingTime = `${this.selectedTime.getHours() < 10 ? '0' + this.selectedTime.getHours() : this.selectedTime.getHours()}:${this.selectedTime.getMinutes() === 0 ? '00' : this.selectedTime.getMinutes()}:00`
+                }
+                // let bookingDate = `${this.selectedDate.getFullYear()}-${this.selectedDate.getMonth()+1 < 10 ? `0${this.selectedDate.getMonth()+1}` : this.selectedDate.getMonth()+1}-${this.selectedDate.getDate() < 10 ? `0${this.selectedDate.getDate()}` : this.selectedDate.getDate()}`
+                // let bookingTime = `${this.selectedTime.getHours() < 10 ? '0' + this.selectedTime.getHours() : this.selectedTime.getHours()}:${this.selectedTime.getMinutes() === 0 ? '00' : this.selectedTime.getMinutes()}:00`
+                // alert(this.selectedDate === this.classes.date ? 'Same' : 'Not same')
                 confirm({
-                    title: "Confirm Booking",
-                    message: `Your are making a class for ${bookingDate} @ ${bookingTime}`,
+                    title: "Update Booking",
+                    message: `Your are updating this class for ${bookingDate} @ ${bookingTime}`,
                     okButtonText: "Yes",
                     cancelButtonText: "No"
                 }).then(result => {
+                    // console.log(result)
                     if (result){
                         let data = {
+                            id: this.classes.id,
                             title: this.title,
                             date: bookingDate,
                             time: bookingTime,
                             class_length: this.length,
                             going: 0
                         }
-                        console.log(data)
-                        this.$store.dispatch('createClass', data)
+                        this.$store.dispatch('updateClass', data)
                         .then((res) => {
-                            this.$navigateTo(App, {clearHistory: true}) 
+                            this.$navigateTo(Classes, {clearHistory: true}) 
                         })
                         .catch((error) => {
                             if (error.response.status === 405){
@@ -94,9 +120,7 @@ import App from '../screens/Home.vue'
                             }
                         })
                     }
-                        // this.$store.dispatch('createBookingForUser', {username: this.users[this.selectedUser], date: bookingDate, booking_type: 'Private', time: bookingTime})
                 });
-                // console.log(bookingDate)
             }
         },
         redirect(screen){
@@ -104,11 +128,6 @@ import App from '../screens/Home.vue'
                 case 'Home':
                     this.$navigateTo(App, {clearHistory: true})
                     break;
-                // case 'Classes':
-                //     this.$navigateTo(Classes, {clearHistory: true})
-                //     break;
-                // default:
-                //     this.$navigateTo(App, {clearHistory: true})
             }
         }
     }

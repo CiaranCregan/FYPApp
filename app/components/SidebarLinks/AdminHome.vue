@@ -5,6 +5,7 @@
         <Label class="drawer-item border" text="Clients" @tap="navigate('Clients')"/>
         <Label class="drawer-item" text="Bookings" @tap="navigate('Bookings')"/>
         <Label class="drawer-item" text="Classes" @tap="navigate('Classes')"/>
+        <Label class="drawer-item" text="Logout" @tap="logout"/>
         <!-- <Label class="drawer-item" text="Scan QR Code" @tap="navigate('Scan')"/> -->
     </StackLayout>
 </template>
@@ -14,8 +15,19 @@ import Clients from '../../screens/Clients.vue'
 import Bookings from '../../screens/Bookings.vue'
 import Classes from '../../screens/AdminClasses.vue'
 
+import Login from '../../screens/Login.vue'
+
     export default {
         methods: {
+            logout(){
+                this.$store.dispatch('logout')
+                    .then((res) => {
+                        this.$navigateTo(Login, {clearHistory: true})
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            },
             navigate(screen){
                 switch(screen) {
                     case 'Clients':

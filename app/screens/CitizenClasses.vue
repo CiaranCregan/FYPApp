@@ -15,9 +15,8 @@
                 <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
             </StackLayout>
             <StackLayout ~mainContent class="content">
-                    <Button text="View your classes" @tap="myClasses" class="cardBtn"/>
                     <StackLayout v-if="allClasses.length === 0">
-                        <Label text="No classes for today" class="card"/>
+                        <Label text="No classes have been created" class="card"/>
                     </StackLayout>
                     <StackLayout v-else>
                         <card-view margin="10" col="1" row="1" backgroundColor="green" v-for="(classes, index) in allClasses" :key="index">

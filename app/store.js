@@ -365,6 +365,24 @@ export default new Vuex.Store({
         })
       })
     },
+    updateClass({commit}, data){
+      let newData = {
+        title: data.title,
+        date: data.date,
+        time: data.time,
+        class_length: data.class_length,
+        going: 0
+      }
+      return new Promise(function(resolve, reject){
+        axios.post('http://127.0.0.1:8888/example-project/public/api/admin/classes/update/' + data.id, newData)
+            .then((response) => {
+              resolve(response)
+            })
+            .catch((error) => {
+              reject(error)
+        })
+      })
+    },
     getConfimsForThisClass({commit}, data){
       axios.get('http://127.0.0.1:8888/example-project/public/api/admin/classes/going/' + data)
             .then((response) => {
