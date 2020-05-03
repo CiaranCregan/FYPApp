@@ -2,7 +2,7 @@
     <Page>
         <ActionBar>
             <GridLayout class="nav" width="100%" columns="auto, *">
-                <Image v-if="showMenu" src="~/Images/menu.png" stretch="fill" width="30" @tap="openSidebar"/>
+                <Image src="~/Images/menu.png" stretch="fill" width="30" @tap="openSidebar"/>
                 <Label class="title" :text="username" col="1" />
             </GridLayout>
         </ActionBar>
