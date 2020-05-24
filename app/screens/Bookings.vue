@@ -8,12 +8,13 @@
         </ActionBar>
         <ScrollView>
         <RadSideDrawer ref="drawer">
-            <StackLayout ~drawerContent backgroundColor="#d9544d">
+            <StackLayout ~drawerContent backgroundColor="green">
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
 
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
                 <Label class="drawer-item" text="Clients" @tap="redirect('Clients')"/>
                 <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/>
+                <Label class="drawer-item" text="Logout" @tap="logout"/>
             </StackLayout>
             <StackLayout ~mainContent class="content">
                     <Button text="Create new booking" @tap="createBooking" class="cardBtn"/>
@@ -48,6 +49,8 @@ import CreateBooking from '../screens/CreateBooking.vue'
 import Classes from '../screens/AdminClasses.vue'
 
 import EditBooking from '../screens/EditBooking.vue'
+
+import Login from '../screens/Login.vue'
   export default {
     data() {
         return {
@@ -116,7 +119,16 @@ import EditBooking from '../screens/EditBooking.vue'
                     })
                 }
             });
-        },  
+        }, 
+        logout(){
+            this.$store.dispatch('logout')
+                .then((res) => {
+                    this.$navigateTo(Login, {clearHistory: true})
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        },
         redirect(screen){
             switch(screen) {
                 case 'Home':

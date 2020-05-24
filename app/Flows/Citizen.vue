@@ -1,27 +1,27 @@
 <template>
     <StackLayout>
         <GridLayout columns="*,*" rows="*,*" width="100%" height="400">
-            <card-view margin="10" col="0" row="0" backgroundColor="#275DAD">
+            <card-view margin="10" col="0" row="0" backgroundColor="#dfe1e5">
                 <DockLayout width="100%" height="200" stretchLastChild="false">
                     <Label text="Profile" dock="top" height="60%" class="h3"/>
-                    <Button text="Manage My Profile" dock="bottom" height="40%" backgroundColor="#3A7CA5" class="cardBtn" @tap="navigate('Profile')"/>
+                    <Button text="Manage My Profile" dock="bottom" height="40%" backgroundColor="green" class="cardBtn" @tap="navigate('Profile')"/>
                 </DockLayout>
             </card-view>
-            <card-view margin="10" col="1" row="0" backgroundColor="#275DAD">
+            <card-view margin="10" col="1" row="0" backgroundColor="#dfe1e5">
                 <DockLayout width="100%" height="200" stretchLastChild="false">
                     <Label text="Classes" dock="top" height="60%" class="h3"/>
-                    <Button text="View Classes" dock="bottom" height="40%" backgroundColor="#3A7CA5" class="cardBtn" @tap="navigate('Classes')"/>
+                    <Button text="View Classes" dock="bottom" height="40%" backgroundColor="green" class="cardBtn" @tap="navigate('Classes')"/>
                 </DockLayout>
             </card-view>
-            <card-view margin="10" col="0" row="1" backgroundColor="#275DAD">
+            <card-view margin="10" col="0" row="1" backgroundColor="#dfe1e5">
                 <DockLayout width="100%" height="200" stretchLastChild="false">
                     <Label text="Bookings" dock="top" height="60%" class="h3"/>
-                    <Button text="View my Bookings" dock="bottom" height="40%" backgroundColor="#3A7CA5" class="cardBtn" @tap="navigate('Bookings')"/>
+                    <Button text="View my Bookings" dock="bottom" height="40%" backgroundColor="green" class="cardBtn" @tap="navigate('Bookings')"/>
                 </DockLayout>
             </card-view>
         </GridLayout>
         <card-view margin="10" padding="20" height="100" background="green" @tap="navigate('Bookings')">
-            <Label :text="firstBooking" class="h3 white" textWrap="true"/>
+            <Label :text="firstBooking" class="h3" textWrap="true"/>
         </card-view>
     </StackLayout>
 </template>
@@ -87,7 +87,7 @@ import CitizenBookings from '../screens/CitizenBookings.vue'
     text-align: center;
     font-size: 15;
     border-width: 4 0 0 0;
-    border-color: #7CA5B8;
+    border-color: #dfe1e5;
     border-radius: 0;
 }
 </style>

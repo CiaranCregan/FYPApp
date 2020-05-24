@@ -6,7 +6,6 @@
         <Label class="drawer-item" text="Bookings" @tap="navigate('Bookings')"/>
         <Label class="drawer-item" text="Classes" @tap="navigate('Classes')"/>
         <Label class="drawer-item" text="Logout" @tap="logout"/>
-        <!-- <Label class="drawer-item" text="Scan QR Code" @tap="navigate('Scan')"/> -->
     </StackLayout>
 </template>
 

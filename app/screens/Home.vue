@@ -9,7 +9,7 @@
             <PullToRefresh @refresh="refreshList">
                 <ScrollView>
                     <RadSideDrawer ref="drawer">
-                        <StackLayout ~drawerContent backgroundColor="#d9544d">
+                        <StackLayout ~drawerContent backgroundColor="green">
                             <!-- ADMIN LINKS WILL GO IN HERE -->
                             <AdminHomeLinks v-if="isAdmin" />
                             <!-- CITIZEN LINKS WILL GO IN HERE -->

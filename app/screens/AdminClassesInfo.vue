@@ -8,9 +8,13 @@
         </ActionBar>
         <ScrollView>
         <RadSideDrawer ref="drawer">
-            <StackLayout ~drawerContent backgroundColor="#d9544d">
+            <StackLayout ~drawerContent backgroundColor="green">
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
+                <Label class="drawer-item" text="Clients" @tap="redirect('Clients')"/>
+                <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
+                <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/>
+                <Label class="drawer-item" text="Logout" @tap="logout"/>
             </StackLayout>
             <StackLayout ~mainContent class="content">
                         <Label text="Clients that are booked into this class:" class="card"/>
@@ -29,7 +33,12 @@
 
 <script >
 import App from '../screens/Home.vue'
+import Clients from '../screens/Clients.vue'
+import Bookings from '../screens/Bookings.vue'
+import Classes from '../screens/AdminClasses.vue'
 import CitizenClasses from '../screens/CitizenClasses.vue'
+
+import Login from '../screens/Login.vue'
 
   export default {
       props: ['classes'],
@@ -50,6 +59,15 @@ import CitizenClasses from '../screens/CitizenClasses.vue'
         this.$store.dispatch('getConfimsForThisClass', this.classes.id);
     },
     methods: {
+        logout(){
+            this.$store.dispatch('logout')
+                .then((res) => {
+                    this.$navigateTo(Login, {clearHistory: true})
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        },
         openSidebar(){
             this.$refs.drawer.nativeView.showDrawer();
         },
@@ -58,7 +76,15 @@ import CitizenClasses from '../screens/CitizenClasses.vue'
                 case 'Home':
                     this.$navigateTo(App, {clearHistory: true})
                     break;
-           
+                case 'Clients':
+                    this.$navigateTo(Clients, {clearHistory: true})
+                    break;
+                case 'Bookings':
+                    this.$navigateTo(Bookings, {clearHistory: true})
+                    break;
+                case 'Classes':
+                    this.$navigateTo(Classes, {clearHistory: true})
+                    break;
             }
         }
     }

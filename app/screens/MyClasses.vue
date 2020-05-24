@@ -8,11 +8,12 @@
         </ActionBar>
         <ScrollView>
         <RadSideDrawer ref="drawer">
-            <StackLayout ~drawerContent backgroundColor="#d9544d">
+            <StackLayout ~drawerContent backgroundColor="green">
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
                 <Label class="drawer-item" text="Profile" @tap="redirect('Profile')"/>
                 <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
+                <Label class="drawer-item" text="Logout" @tap="logout"/>
             </StackLayout>
             <StackLayout ~mainContent class="content">
                 <Button text="View classes" @tap="viewClasses" class="cardBtn"/>
@@ -42,6 +43,7 @@ import Profile from '../screens/Profile.vue'
 import Bookings from '../screens/CitizenBookings.vue'
 
 import OtherClasses from '../screens/CitizenClasses.vue'
+import Login from '../screens/Login.vue'
   export default {
     data() {
         return {
@@ -63,6 +65,15 @@ import OtherClasses from '../screens/CitizenClasses.vue'
         this.$store.dispatch('myClasses');
     },
     methods: {
+        logout(){
+            this.$store.dispatch('logout')
+                .then((res) => {
+                    this.$navigateTo(Login, {clearHistory: true})
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        },
         openSidebar(){
             this.$refs.drawer.nativeView.showDrawer();
         },

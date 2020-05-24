@@ -7,12 +7,13 @@
             </GridLayout>
         </ActionBar>
         <RadSideDrawer ref="drawer">
-            <StackLayout ~drawerContent backgroundColor="#d9544d">
+            <StackLayout ~drawerContent backgroundColor="green">
                 <Image src="~/Images/profile.png" stretch="fill" width="50%" height="150" class="border-props image-padding"/>
 
                 <Label class="drawer-item border" text="Home" @tap="redirect('Home')"/>
                 <Label class="drawer-item" text="Bookings" @tap="redirect('Bookings')"/>
                 <Label class="drawer-item" text="Classes" @tap="redirect('Classes')"/>
+                <Label class="drawer-item" text="Logout" @tap="logout"/>
             </StackLayout>
 
             <StackLayout ~mainContent class="content">
@@ -20,7 +21,7 @@
                     <Label text="No users have registered yet"/>
                 </StackLayout>
                 <StackLayout v-else>
-                    <card-view margin="10" padding="20" background="red" v-for="(user, index) in users" :key="index" @tap="loadUserBookings(user.id)">
+                    <card-view margin="10" padding="20" background="green" v-for="(user, index) in users" :key="index" @tap="loadUserBookings(user.id)">
                         <Label :text="user.name" class="card"/>
                     </card-view>
                 </StackLayout>
@@ -35,6 +36,8 @@ import Bookings from '../screens/Bookings.vue'
 import Classes from '../screens/AdminClasses.vue'
 
 import AdminClientsView from '../screens/AdminClientview.vue'
+
+import Login from '../screens/Login.vue'
   export default {
     data() {
         return {
@@ -55,6 +58,15 @@ import AdminClientsView from '../screens/AdminClientview.vue'
         this.$store.dispatch('getAllClients');
     },
     methods: {
+        logout(){
+            this.$store.dispatch('logout')
+                .then((res) => {
+                    this.$navigateTo(Login, {clearHistory: true})
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        },
         openSidebar(){
             this.$refs.drawer.nativeView.showDrawer();
         },
