@@ -6,20 +6,24 @@
                     <Label class="title" :text="username" col="1" />
                 </GridLayout>
             </ActionBar>
-                <RadSideDrawer ref="drawer">
-                    <StackLayout ~drawerContent backgroundColor="#d9544d">
-                        <!-- ADMIN LINKS WILL GO IN HERE -->
-                        <AdminHomeLinks v-if="isAdmin" />
-                        <!-- CITIZEN LINKS WILL GO IN HERE -->
-                        <CitizenHomeLinks v-if="!isAdmin" />
-                    </StackLayout>
-                    <StackLayout ~mainContent class="main-content">
-                        <!-- ADMIN SECTION WILL GO IN HERE -->
-                        <Admin v-if="isAdmin"/>
-                        <!-- CITIZEN SECTION WILL GO IN HERE -->
-                        <Citizen v-if="!isAdmin"/>
-                    </StackLayout>
-                </RadSideDrawer>
+            <PullToRefresh @refresh="refreshList">
+                <ScrollView>
+                    <RadSideDrawer ref="drawer">
+                        <StackLayout ~drawerContent backgroundColor="#d9544d">
+                            <!-- ADMIN LINKS WILL GO IN HERE -->
+                            <AdminHomeLinks v-if="isAdmin" />
+                            <!-- CITIZEN LINKS WILL GO IN HERE -->
+                            <CitizenHomeLinks v-if="!isAdmin" />
+                        </StackLayout>
+                        <StackLayout ~mainContent class="main-content">
+                            <!-- ADMIN SECTION WILL GO IN HERE -->
+                            <Admin v-if="isAdmin"/>
+                            <!-- CITIZEN SECTION WILL GO IN HERE -->
+                            <Citizen v-if="!isAdmin"/>
+                        </StackLayout>
+                    </RadSideDrawer>
+                </ScrollView>
+            </PullToRefresh>
     </Page>
 </template>
 
@@ -72,8 +76,11 @@ import Login from './Login.vue'
         },
         refreshList(args) {
             let pullRefresh = args.object;
+            let self = this
             setTimeout(function() {
-                pullRefresh.refreshing = false;
+                self.$store.dispatch('getTodaysBookingsForAdmin');
+                self.$store.dispatch('getTodaysClassesForAdmin');
+                pullRefresh.refreshing = false
             }, 1000);
         },
         onScan() {
@@ -84,6 +91,9 @@ import Login from './Login.vue'
             }).then(() => {
                 console.log("Alert dialog closed");
             });
+        },
+        refresh(){
+            this.$store.dispatch('getUserInformation')
         }
     },
   }
